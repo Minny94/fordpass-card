@@ -5,7 +5,7 @@
  * MIT License. Not affiliated with, endorsed by or sponsored by Ford Motor Company.
  */
 (() => {
-  const FPC_VERSION = "0.5.0";
+  const FPC_VERSION = "0.6.0";
   const FPC_TAG = "fordpass-card";
   const FPC_EDITOR_TAG = FPC_TAG + "-editor";
   const FPC_REPO = "https://github.com/Minny94/fordpass-card";
@@ -190,6 +190,176 @@
     cooled: ["Cool", "Fresco", "Frío", "Froid", "Kühlen"],
   };
 
+  // ---------- Details pop-up dictionaries ----------
+
+  // Attribute names (lower case) shown in the details pop-up
+  const FPC_ATTR = {
+    frontleft: ["Front left", "Anteriore sinistro", "Delantero izquierdo", "Avant gauche", "Vorne links"],
+    frontright: ["Front right", "Anteriore destro", "Delantero derecho", "Avant droit", "Vorne rechts"],
+    rearleft: ["Rear left", "Posteriore sinistro", "Trasero izquierdo", "Arrière gauche", "Hinten links"],
+    rearright: ["Rear right", "Posteriore destro", "Trasero derecho", "Arrière droit", "Hinten rechts"],
+    driver: ["Driver", "Guidatore", "Conductor", "Conducteur", "Fahrer"],
+    passenger: ["Passenger", "Passeggero", "Acompañante", "Passager", "Beifahrer"],
+    systemstate: ["System", "Sistema", "Sistema", "Système", "System"],
+    batteryvoltage: ["Voltage", "Tensione", "Tensión", "Tension", "Spannung"],
+    batteryloadstatus: ["Load status", "Stato di carico", "Estado de carga", "État de charge", "Ladezustand"],
+    fuelrange: ["Range", "Autonomia", "Autonomía", "Autonomie", "Reichweite"],
+    ambienttemp: ["Outside temperature", "Temperatura esterna", "Temperatura exterior", "Température extérieure", "Außentemperatur"],
+    acceleration: ["Acceleration", "Accelerazione", "Aceleración", "Accélération", "Beschleunigung"],
+    sensortype: ["Sensor type", "Tipo sensore", "Tipo de sensor", "Type de capteur", "Sensortyp"],
+    acceleratorpedalposition: ["Accelerator pedal", "Pedale acceleratore", "Pedal del acelerador", "Pédale d'accélérateur", "Gaspedal"],
+    brakepedalstatus: ["Brake pedal", "Pedale del freno", "Pedal de freno", "Pédale de frein", "Bremspedal"],
+    braketorque: ["Brake torque", "Coppia frenante", "Par de frenado", "Couple de freinage", "Bremsmoment"],
+    parkingbrakestatus: ["Parking brake", "Freno di stazionamento", "Freno de mano", "Frein de stationnement", "Feststellbremse"],
+    torqueattransmission: ["Transmission torque", "Coppia al cambio", "Par en la transmisión", "Couple à la transmission", "Getriebemoment"],
+    wheeltorquestatus: ["Wheel torque", "Coppia alle ruote", "Par en las ruedas", "Couple aux roues", "Radmoment"],
+    yawrate: ["Yaw rate", "Velocità d'imbardata", "Velocidad de guiñada", "Vitesse de lacet", "Gierrate"],
+    enginespeed: ["Engine speed", "Giri motore", "Régimen del motor", "Régime moteur", "Motordrehzahl"],
+    tripfueleconomy: ["Trip fuel economy", "Consumo del viaggio", "Consumo del viaje", "Consommation du trajet", "Verbrauch der Fahrt"],
+    location: ["Position", "Posizione", "Ubicación", "Position", "Position"],
+    lat: ["Latitude", "Latitudine", "Latitud", "Latitude", "Breitengrad"],
+    latitude: ["Latitude", "Latitudine", "Latitud", "Latitude", "Breitengrad"],
+    lon: ["Longitude", "Longitudine", "Longitud", "Longitude", "Längengrad"],
+    longitude: ["Longitude", "Longitudine", "Longitud", "Longitude", "Längengrad"],
+    alt: ["Altitude", "Altitudine", "Altitud", "Altitude", "Höhe"],
+    altitude: ["Altitude", "Altitudine", "Altitud", "Altitude", "Höhe"],
+    gpsdimension: ["GPS fix", "Fix GPS", "Fix GPS", "Fix GPS", "GPS-Fix"],
+    gpscoordinatemethod: ["Method", "Metodo", "Método", "Méthode", "Methode"],
+    gpsmoduletimestamp: ["GPS time", "Ora GPS", "Hora GPS", "Heure GPS", "GPS-Zeit"],
+    compassdirection: ["Heading", "Direzione", "Dirección", "Direction", "Richtung"],
+    gps_accuracy: ["Accuracy", "Precisione", "Precisión", "Précision", "Genauigkeit"],
+    pdop: ["Precision (PDOP)", "Precisione (PDOP)", "Precisión (PDOP)", "Précision (PDOP)", "Genauigkeit (PDOP)"],
+    hdop: ["Horizontal precision (HDOP)", "Precisione orizzontale (HDOP)", "Precisión horizontal (HDOP)", "Précision horizontale (HDOP)", "Horizontale Genauigkeit (HDOP)"],
+    vdop: ["Vertical precision (VDOP)", "Precisione verticale (VDOP)", "Precisión vertical (VDOP)", "Précision verticale (VDOP)", "Vertikale Genauigkeit (VDOP)"],
+    gdop: ["Geometric precision (GDOP)", "Precisione geometrica (GDOP)", "Precisión geométrica (GDOP)", "Précision géométrique (GDOP)", "Geometrische Genauigkeit (GDOP)"],
+    in_zones: ["Zones", "Zone", "Zonas", "Zones", "Zonen"],
+    source_type: ["Source", "Fonte", "Fuente", "Source", "Quelle"],
+    tracking_type: ["Tracking", "Tracciamento", "Seguimiento", "Suivi", "Ortung"],
+    panicalarmstatus: ["Panic alarm", "Allarme panico", "Alarma de pánico", "Alarme panique", "Panikalarm"],
+    alarm_source: ["Triggered by", "Origine", "Origen", "Origine", "Auslöser"],
+    type: ["Type", "Tipo", "Tipo", "Type", "Typ"],
+    dieselexhaustovertemp: ["Exhaust over-temperature", "Sovratemperatura scarico", "Sobretemperatura del escape", "Surchauffe échappement", "Abgas-Übertemperatur"],
+    dieselparticulatefiltersootlevel: ["DPF soot level", "Livello particolato DPF", "Nivel de hollín DPF", "Niveau de suie FAP", "DPF-Rußbeladung"],
+    dieselexhaustfluidrange: ["AdBlue range", "Autonomia AdBlue", "Autonomía AdBlue", "Autonomie AdBlue", "AdBlue-Reichweite"],
+    dieselexhaustfluidlow: ["AdBlue low", "AdBlue basso", "AdBlue bajo", "AdBlue bas", "AdBlue niedrig"],
+    dieselexhaustfluidsystemfault: ["AdBlue system fault", "Guasto sistema AdBlue", "Fallo del sistema AdBlue", "Défaut système AdBlue", "AdBlue-Systemfehler"],
+    firmwareversion: ["Firmware version", "Versione firmware", "Versión de firmware", "Version du firmware", "Firmware-Version"],
+    updatedecus: ["Updated modules", "Moduli aggiornati", "Módulos actualizados", "Modules mis à jour", "Aktualisierte Steuergeräte"],
+    ecuid: ["Module", "Modulo", "Módulo", "Module", "Steuergerät"],
+    partnumber: ["Part number", "Codice ricambio", "Referencia", "Référence", "Teilenummer"],
+    nickname: ["Nickname", "Soprannome", "Apodo", "Surnom", "Spitzname"],
+    licenseplate: ["Licence plate", "Targa", "Matrícula", "Plaque", "Kennzeichen"],
+    vin: ["VIN", "Telaio (VIN)", "Bastidor (VIN)", "VIN", "FIN"],
+    color: ["Colour", "Colore", "Color", "Couleur", "Farbe"],
+    modelyear: ["Model year", "Anno modello", "Año del modelo", "Année modèle", "Modelljahr"],
+    history: ["History", "Cronologia", "Historial", "Historique", "Verlauf"],
+    value: ["Value", "Valore", "Valor", "Valeur", "Wert"],
+    lowerbound: ["Min", "Min", "Mín", "Min", "Min"],
+    upperbound: ["Max", "Max", "Máx", "Max", "Max"],
+  };
+
+  // Door names (lower case); used for door and lock sensors
+  const FPC_DOORS = {
+    driverfront: ["Driver door", "Porta guidatore", "Puerta del conductor", "Porte conducteur", "Fahrertür"],
+    passengerfront: ["Passenger door", "Porta passeggero", "Puerta del acompañante", "Porte passager", "Beifahrertür"],
+    driverrear: ["Rear door, driver side", "Porta post. lato guida", "Puerta trasera, lado conductor", "Porte arrière côté conducteur", "Hintertür Fahrerseite"],
+    passengerrear: ["Rear door, passenger side", "Porta post. lato passeggero", "Puerta trasera, lado acompañante", "Porte arrière côté passager", "Hintertür Beifahrerseite"],
+    rearleft: ["Rear left door", "Porta posteriore sinistra", "Puerta trasera izquierda", "Porte arrière gauche", "Tür hinten links"],
+    rearright: ["Rear right door", "Porta posteriore destra", "Puerta trasera derecha", "Porte arrière droite", "Tür hinten rechts"],
+    tailgate: ["Tailgate", "Portellone", "Portón trasero", "Hayon", "Heckklappe"],
+    innertailgate: ["Inner tailgate", "Portellone interno", "Portón interior", "Hayon intérieur", "Innere Heckklappe"],
+    hood: ["Bonnet", "Cofano", "Capó", "Capot", "Motorhaube"],
+    frunk: ["Front trunk", "Bagagliaio anteriore", "Maletero delantero", "Coffre avant", "Frunk"],
+    alldoors: ["All doors", "Tutte le porte", "Todas las puertas", "Toutes les portes", "Alle Türen"],
+  };
+
+  // Attribute values (upper case) in singular form for the details pop-up; FPC_STATES is the fallback
+  const FPC_VALUES = {
+    NORMAL: ["Normal", "Normale", "Normal", "Normal", "Normal"],
+    NORMAL_OPERATION: ["Normal", "Normale", "Normal", "Normal", "Normal"],
+    LOW: ["Low", "Bassa", "Baja", "Basse", "Niedrig"],
+    HIGH: ["High", "Alta", "Alta", "Haute", "Hoch"],
+    OPEN: ["Open", "Aperto", "Abierto", "Ouvert", "Offen"],
+    CLOSED: ["Closed", "Chiuso", "Cerrado", "Fermé", "Geschlossen"],
+    LOCKED: ["Locked", "Bloccato", "Bloqueado", "Verrouillé", "Verriegelt"],
+    UNLOCKED: ["Unlocked", "Sbloccato", "Desbloqueado", "Déverrouillé", "Entriegelt"],
+    BUCKLED: ["Fastened", "Allacciata", "Abrochado", "Attachée", "Angelegt"],
+    UNBUCKLED: ["Not fastened", "Slacciata", "Desabrochado", "Détachée", "Nicht angelegt"],
+    UNDEFINED: ["Not set", "Non definito", "No definido", "Non défini", "Nicht definiert"],
+    ACTUAL: ["Actual", "Reale", "Real", "Réelle", "Tatsächlich"],
+    DIM_2D: ["2D", "2D", "2D", "2D", "2D"],
+    DIM_3D: ["3D", "3D", "3D", "3D", "3D"],
+    NORTH: ["North", "Nord", "Norte", "Nord", "Nord"],
+    SOUTH: ["South", "Sud", "Sur", "Sud", "Süd"],
+    EAST: ["East", "Est", "Este", "Est", "Ost"],
+    WEST: ["West", "Ovest", "Oeste", "Ouest", "West"],
+    NORTH_EAST: ["North-east", "Nord-est", "Noreste", "Nord-est", "Nordost"],
+    NORTH_WEST: ["North-west", "Nord-ovest", "Noroeste", "Nord-ouest", "Nordwest"],
+    SOUTH_EAST: ["South-east", "Sud-est", "Sureste", "Sud-est", "Südost"],
+    SOUTH_WEST: ["South-west", "Sud-ovest", "Suroeste", "Sud-ouest", "Südwest"],
+    NORTHEAST: ["North-east", "Nord-est", "Noreste", "Nord-est", "Nordost"],
+    NORTHWEST: ["North-west", "Nord-ovest", "Noroeste", "Nord-ouest", "Nordwest"],
+    SOUTHEAST: ["South-east", "Sud-est", "Sureste", "Sud-est", "Südost"],
+    SOUTHWEST: ["South-west", "Sud-ovest", "Suroeste", "Sud-ouest", "Südwest"],
+    MECHANICAL: ["Mechanical", "Meccanico", "Mecánico", "Mécanique", "Mechanisch"],
+    ELECTRIC: ["Electric", "Elettrico", "Eléctrico", "Électrique", "Elektrisch"],
+  };
+
+  const FPC_LIGHT = {
+    on: ["On", "Accesa", "Encendido", "Allumé", "An"],
+    off: ["Off", "Spenta", "Apagado", "Éteint", "Aus"],
+  };
+
+  // Dashboard warning lights from the FordPass "indicators" sensor (code suffix removed)
+  const FPC_INDICATORS = {
+    adaptivecruisecontrol: ["Adaptive cruise control", "Cruise control adattivo", "Control de crucero adaptativo", "Régulateur adaptatif", "Abstandsregeltempomat"],
+    airfilterminder: ["Air filter", "Filtro aria", "Filtro de aire", "Filtre à air", "Luftfilter"],
+    airsuspensionridecontrolfault: ["Air suspension fault", "Guasto sospensioni pneumatiche", "Fallo de la suspensión neumática", "Défaut suspension pneumatique", "Luftfederung gestört"],
+    allwheeldrivedisabled: ["AWD disabled", "Trazione integrale disattivata", "Tracción total desactivada", "Transmission intégrale désactivée", "Allradantrieb deaktiviert"],
+    antitheft: ["Anti-theft", "Antifurto", "Antirrobo", "Antivol", "Diebstahlschutz"],
+    antilockbrake: ["ABS", "ABS", "ABS", "ABS", "ABS"],
+    blindspotdetection: ["Blind spot detection", "Monitoraggio angolo cieco", "Detector de ángulo muerto", "Détection d'angle mort", "Toter-Winkel-Assistent"],
+    brakewarning: ["Brake warning", "Spia freni", "Testigo de freno", "Alerte freins", "Bremswarnung"],
+    chargesystemfault: ["Charging system fault", "Guasto sistema di ricarica", "Fallo del sistema de carga", "Défaut système de charge", "Ladesystem gestört"],
+    checkfuelcap: ["Check fuel cap", "Controlla tappo carburante", "Revisar tapón de combustible", "Vérifier le bouchon", "Tankdeckel prüfen"],
+    checkfuelfillinlet: ["Check fuel filler", "Controlla bocchettone", "Revisar boca de llenado", "Vérifier la goulotte", "Tankstutzen prüfen"],
+    dieselengineidleshutdown: ["Diesel idle shutdown", "Spegnimento al minimo", "Apagado al ralentí", "Arrêt au ralenti", "Leerlaufabschaltung"],
+    dieselenginewarning: ["Diesel engine warning", "Avviso motore diesel", "Aviso motor diésel", "Alerte moteur diesel", "Dieselmotor-Warnung"],
+    dieselexhaustfluidlow: ["AdBlue low", "AdBlue basso", "AdBlue bajo", "AdBlue bas", "AdBlue niedrig"],
+    dieselexhaustfluidsystemfault: ["AdBlue system fault", "Guasto sistema AdBlue", "Fallo del sistema AdBlue", "Défaut système AdBlue", "AdBlue-Systemfehler"],
+    dieselexhaustovertemp: ["Exhaust over-temperature", "Sovratemperatura scarico", "Sobretemperatura del escape", "Surchauffe échappement", "Abgas-Übertemperatur"],
+    dieselparticulatefilter: ["Diesel particulate filter", "Filtro antiparticolato (DPF)", "Filtro de partículas", "Filtre à particules", "Dieselpartikelfilter"],
+    dieselpreheat: ["Glow plugs", "Candelette", "Precalentamiento", "Préchauffage", "Vorglühen"],
+    electrictrailerbrakeconnection: ["Trailer brake connection", "Collegamento freno rimorchio", "Conexión freno del remolque", "Connexion frein de remorque", "Anhängerbremse Verbindung"],
+    electronicparkingbrakewarning: ["Electronic parking brake", "Freno di stazionamento elettrico", "Freno de estacionamiento eléctrico", "Frein de stationnement électrique", "Elektrische Feststellbremse"],
+    enginecoolantovertemp: ["Coolant over-temperature", "Surriscaldamento refrigerante", "Sobretemperatura del refrigerante", "Surchauffe liquide de refroidissement", "Kühlmittel-Übertemperatur"],
+    fastenseatbeltwarning: ["Fasten seat belt", "Allacciare le cinture", "Abrochar el cinturón", "Attacher la ceinture", "Gurt anlegen"],
+    forwardcollisionwarning: ["Forward collision warning", "Avviso collisione frontale", "Alerta de colisión frontal", "Alerte de collision avant", "Kollisionswarnung"],
+    fueldooropen: ["Fuel door open", "Sportello carburante aperto", "Tapa de combustible abierta", "Trappe à carburant ouverte", "Tankklappe offen"],
+    gasparticulatefilterwarning: ["Petrol particulate filter", "Filtro antiparticolato benzina", "Filtro de partículas gasolina", "Filtre à particules essence", "Ottopartikelfilter"],
+    genericabsfaultwarning: ["ABS fault", "Guasto ABS", "Fallo del ABS", "Défaut ABS", "ABS-Störung"],
+    hevhazard: ["Hybrid system hazard", "Pericolo sistema ibrido", "Peligro del sistema híbrido", "Danger système hybride", "Hybridsystem-Gefahr"],
+    hilldescentcontrolfault: ["Hill descent control fault", "Guasto controllo discesa", "Fallo del control de descenso", "Défaut aide à la descente", "Bergabfahrhilfe gestört"],
+    hillstartassistwarning: ["Hill start assist", "Assistenza partenza in salita", "Asistente de arranque en pendiente", "Aide au démarrage en côte", "Berganfahrassistent"],
+    lanekeepingaid: ["Lane keeping aid", "Mantenimento corsia", "Asistente de carril", "Aide au maintien de voie", "Spurhalteassistent"],
+    lightingsystemfailure: ["Lighting failure", "Guasto luci", "Fallo de iluminación", "Défaut d'éclairage", "Beleuchtungsstörung"],
+    lowbrakefluid: ["Low brake fluid", "Liquido freni basso", "Líquido de frenos bajo", "Liquide de frein bas", "Bremsflüssigkeit niedrig"],
+    lowengineoilpressure: ["Low oil pressure", "Pressione olio bassa", "Presión de aceite baja", "Pression d'huile basse", "Öldruck niedrig"],
+    lowfuel: ["Low fuel", "Riserva carburante", "Combustible bajo", "Carburant bas", "Kraftstoff niedrig"],
+    lowwasherfluid: ["Low washer fluid", "Liquido lavavetri basso", "Líquido limpiaparabrisas bajo", "Lave-glace bas", "Waschwasser niedrig"],
+    malfunctionindicator: ["Engine malfunction", "Spia avaria motore", "Avería del motor", "Défaut moteur", "Motorkontrollleuchte"],
+    parkaidmalfunction: ["Park aid fault", "Guasto sensori di parcheggio", "Fallo ayuda al aparcamiento", "Défaut aide au stationnement", "Einparkhilfe gestört"],
+    passiveentrypassivestart: ["Keyless entry and start", "Accesso e avviamento senza chiave", "Acceso y arranque sin llave", "Accès et démarrage sans clé", "Schlüsselloser Zugang"],
+    powertrainmalfunction: ["Powertrain fault", "Guasto gruppo propulsore", "Fallo del tren motriz", "Défaut groupe motopropulseur", "Antriebsstörung"],
+    restraintsindicatorwarning: ["Airbag and restraints", "Airbag e sistemi di ritenuta", "Airbag y sujeción", "Airbag et retenue", "Airbag und Rückhaltesysteme"],
+    servicesteering: ["Service steering", "Assistenza sterzo", "Revisar dirección", "Réviser la direction", "Lenkung prüfen"],
+    startstopenginewarning: ["Start/stop warning", "Avviso Start&Stop", "Aviso Start/Stop", "Alerte Start/Stop", "Start/Stopp-Warnung"],
+    tractioncontroldisabled: ["Traction control off", "Controllo trazione disattivato", "Control de tracción desactivado", "Antipatinage désactivé", "Traktionskontrolle aus"],
+    tractioncontrolevent: ["Traction control active", "Intervento controllo trazione", "Control de tracción activo", "Antipatinage actif", "Traktionskontrolle aktiv"],
+    tirepressuremonitorsystemwarning: ["Tyre pressure warning", "Avviso pressione pneumatici", "Aviso de presión de neumáticos", "Alerte pression des pneus", "Reifendruckwarnung"],
+    waterinfuel: ["Water in fuel", "Acqua nel gasolio", "Agua en el combustible", "Eau dans le carburant", "Wasser im Kraftstoff"],
+  };
+
   // Editor and card interface text
   const FPC_UI = {
     en: {
@@ -218,6 +388,16 @@
       maps: "Maps app",
       maps_auto: "Automatic (Apple Maps on iPhone/Mac, Google Maps elsewhere)",
       no_position: "No position available",
+      details_updated: "Updated",
+      details_history: "History",
+      details_close: "Close",
+      details_more: "{n} more values not shown",
+      details_on: "Warnings on",
+      details_others: "Other warning lights",
+      details_none_on: "No warning light on",
+      details_maps: "Open in Maps",
+      yes: "Yes",
+      no: "No",
     },
     it: {
       vehicle: "Veicolo",
@@ -245,6 +425,16 @@
       maps: "App mappe",
       maps_auto: "Automatica (Apple Mappe su iPhone/Mac, Google Maps altrove)",
       no_position: "Posizione non disponibile",
+      details_updated: "Aggiornato",
+      details_history: "Cronologia",
+      details_close: "Chiudi",
+      details_more: "Altri {n} valori non mostrati",
+      details_on: "Spie accese",
+      details_others: "Altre spie",
+      details_none_on: "Nessuna spia accesa",
+      details_maps: "Apri in Mappe",
+      yes: "Sì",
+      no: "No",
     },
     es: {
       vehicle: "Vehículo",
@@ -272,6 +462,16 @@
       maps: "App de mapas",
       maps_auto: "Automático (Apple Maps en iPhone/Mac, Google Maps en el resto)",
       no_position: "Ubicación no disponible",
+      details_updated: "Actualizado",
+      details_history: "Historial",
+      details_close: "Cerrar",
+      details_more: "{n} valores más sin mostrar",
+      details_on: "Testigos encendidos",
+      details_others: "Otros testigos",
+      details_none_on: "Ningún testigo encendido",
+      details_maps: "Abrir en Mapas",
+      yes: "Sí",
+      no: "No",
     },
     fr: {
       vehicle: "Véhicule",
@@ -299,6 +499,16 @@
       maps: "App de cartes",
       maps_auto: "Automatique (Plans sur iPhone/Mac, Google Maps ailleurs)",
       no_position: "Position indisponible",
+      details_updated: "Mis à jour",
+      details_history: "Historique",
+      details_close: "Fermer",
+      details_more: "{n} autres valeurs non affichées",
+      details_on: "Témoins allumés",
+      details_others: "Autres témoins",
+      details_none_on: "Aucun témoin allumé",
+      details_maps: "Ouvrir dans Plans",
+      yes: "Oui",
+      no: "Non",
     },
     de: {
       vehicle: "Fahrzeug",
@@ -326,6 +536,16 @@
       maps: "Karten-App",
       maps_auto: "Automatisch (Apple Karten auf iPhone/Mac, sonst Google Maps)",
       no_position: "Keine Position verfügbar",
+      details_updated: "Aktualisiert",
+      details_history: "Verlauf",
+      details_close: "Schließen",
+      details_more: "{n} weitere Werte ausgeblendet",
+      details_on: "Aktive Warnleuchten",
+      details_others: "Weitere Warnleuchten",
+      details_none_on: "Keine Warnleuchte aktiv",
+      details_maps: "In Karten öffnen",
+      yes: "Ja",
+      no: "Nein",
     },
   };
 
@@ -526,6 +746,275 @@
   // GPS sensor tiles navigate by default; any tile can opt in with `navigate: true`
   const fpcNavigates = (item, key) => (item.navigate !== undefined ? !!item.navigate : key === "gps");
 
+  // ---------- Details pop-up: attributes in plain language ----------
+
+  // Attributes that Home Assistant or FordPass add for internal use
+  const FPC_SKIP_ATTRS = new Set([
+    "friendly_name", "icon", "unit_of_measurement", "device_class", "state_class", "options",
+    "entity_picture", "access_token", "attribution", "supported_features", "restored", "editable",
+    "assumed_state", "oemcorrelationid", "commandid", "updatetime", "tracking_type", "source_type",
+  ]);
+  const FPC_DETAIL_MAX = 150;
+
+  const fpcLow = (k) => String(k).toLowerCase();
+  const fpcIsObj = (v) => v !== null && typeof v === "object" && !Array.isArray(v);
+  const fpcIsPrim = (v) => v === null || ["string", "number", "boolean"].includes(typeof v);
+
+  // "frontLeft_state" -> "Front left state", "NORMAL_OPERATION" -> "Normal operation"
+  function fpcHuman(k) {
+    const s = String(k)
+      .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+      .replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2")
+      .replace(/[_-]+/g, " ")
+      .trim()
+      .toLowerCase();
+    return s ? s[0].toUpperCase() + s.slice(1) : String(k);
+  }
+
+  function fpcAttrLabel(k, lang, doors) {
+    const low = fpcLow(k);
+    const row = (doors && FPC_DOORS[low]) || FPC_ATTR[low] || FPC_DOORS[low];
+    return row ? tr(row, lang) : fpcHuman(k);
+  }
+
+  function fpcAttrUnit(hass, low) {
+    const us = (hass.config && hass.config.unit_system) || {};
+    if (low === "batteryvoltage") return "V";
+    if (low === "dieselparticulatefiltersootlevel") return "%";
+    if (low === "gps_accuracy" || low === "alt" || low === "altitude") return "m";
+    if (low === "ambienttemp") return us.temperature || "";
+    if ((low === "fuelrange" || low === "dieselexhaustfluidrange") && us.length === "km") return "km";
+    return "";
+  }
+
+  function fpcDate(d, loc) {
+    try {
+      return d.toLocaleString(loc, { dateStyle: "medium", timeStyle: "short" });
+    } catch (e) {
+      return d.toLocaleString();
+    }
+  }
+
+  function fpcAgo(d, lang, loc) {
+    const sec = Math.round((d.getTime() - Date.now()) / 1000);
+    const abs = Math.abs(sec);
+    let rtf;
+    try {
+      rtf = new Intl.RelativeTimeFormat(loc || lang, { numeric: "auto" });
+    } catch (e) {
+      return fpcDate(d, loc);
+    }
+    if (abs < 60) return rtf.format(sec, "second");
+    if (abs < 3600) return rtf.format(Math.round(sec / 60), "minute");
+    if (abs < 86400) return rtf.format(Math.round(sec / 3600), "hour");
+    if (abs < 86400 * 30) return rtf.format(Math.round(sec / 86400), "day");
+    return fpcDate(d, loc);
+  }
+
+  function fpcAttrValue(hass, v, lang, k) {
+    if (v === null || v === undefined || v === "") return "—";
+    const loc = (hass.locale && hass.locale.language) || lang;
+    if (typeof v === "boolean") return t(lang, v ? "yes" : "no");
+    if (typeof v === "number") {
+      const low = fpcLow(k || "");
+      const digits = /^(lat|lon|lng|latitude|longitude)$/.test(low) ? 6 : 2;
+      let s;
+      try {
+        s = new Intl.NumberFormat(loc, { maximumFractionDigits: digits }).format(v);
+      } catch (e) {
+        s = String(v);
+      }
+      const unit = fpcAttrUnit(hass, low);
+      return unit ? `${s} ${unit}` : s;
+    }
+    if (Array.isArray(v)) return v.length ? v.map((x) => fpcAttrValue(hass, x, lang, k)).join(", ") : "—";
+    if (typeof v === "object") return JSON.stringify(v);
+    const s = String(v);
+    if (/^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}/.test(s)) {
+      const d = new Date(s);
+      if (!isNaN(d)) return fpcDate(d, loc);
+    }
+    if (/^zone\.[a-z0-9_]+$/.test(s) && hass.states[s]) return hass.states[s].attributes.friendly_name || s;
+    if (/^[A-Z][A-Z0-9_]*$/.test(s)) {
+      const row = (k && FPC_STATES[`${fpcLow(k)}:${s}`]) || FPC_VALUES[s] || FPC_STATES[s];
+      return row ? tr(row, lang) : fpcHuman(s);
+    }
+    return s;
+  }
+
+  // Dot colour for a value: green for normal/closed/locked, red for open/unlocked, orange for faults
+  function fpcAttrColor(v, k) {
+    if (typeof v === "boolean") {
+      return v && /fault|warn|low|overtemp|malfunction|open|failure/i.test(k || "") ? WARN : null;
+    }
+    const s = String(v == null ? "" : v).toUpperCase();
+    if (["LOCKED", "CLOSED", "NORMAL", "NORMAL_OPERATION"].includes(s)) return GOOD;
+    if (["OPEN", "UNLOCKED"].includes(s)) return BAD;
+    if (["PARTLY_LOCKED", "LOW", "HIGH"].includes(s) || /FAULT|WARNING|LOW_PRESSURE|HIGH_PRESSURE/.test(s)) return WARN;
+    return null;
+  }
+
+  // {lowerBound, upperBound} (also wrapped, e.g. {doubleRange: {...}}) -> a single value
+  function fpcRange(v, key, lang) {
+    while (fpcIsObj(v) && Object.keys(v).length === 1 && fpcIsObj(Object.values(v)[0])) v = Object.values(v)[0];
+    if (!fpcIsObj(v) || !("lowerBound" in v || "upperBound" in v)) return null;
+    const lo = Number(v.lowerBound);
+    const hi = Number(v.upperBound);
+    if (key === "windowposition") {
+      if (!lo && !hi) return { text: tr(FPC_VALUES.CLOSED, lang), color: GOOD };
+      return { text: `${tr(FPC_VALUES.OPEN, lang)} · ${lo === hi ? hi : `${lo}–${hi}`}`, color: BAD };
+    }
+    return { text: lo === hi ? String(hi) : `${lo} – ${hi}`, color: null };
+  }
+
+  // Build the pop-up content: { sections: [{ title, folded, rows: [{label, value, color, note}] }], more, updated }
+  function fpcDetails(hass, st, key, lang) {
+    const attrs = (st && st.attributes) || {};
+    const doors = key === "doorstatus" || key === "doorlock";
+    let left = FPC_DETAIL_MAX;
+    let more = 0;
+    const push = (sec, r) => {
+      if (left <= 0) {
+        more++;
+        return;
+      }
+      left--;
+      sec.rows.push(r);
+    };
+    const main = { title: "", rows: [] };
+    const sections = [main];
+    const done = new Set();
+
+    // Lift wrappers ("value": {...}, "tags": {...}) to the top level
+    const top = [];
+    for (const [k, v] of Object.entries(attrs)) {
+      const low = fpcLow(k);
+      if (FPC_SKIP_ATTRS.has(low)) continue;
+      if ((low === "value" || low === "tags") && fpcIsObj(v)) {
+        for (const [k2, v2] of Object.entries(v)) if (!FPC_SKIP_ATTRS.has(fpcLow(k2))) top.push([k2, v2]);
+        continue;
+      }
+      if (low === "value" && fpcIsPrim(v) && st && (String(v) === String(st.state) || (v !== "" && Number(v) === Number(st.state)))) continue;
+      top.push([k, v]);
+    }
+
+    if (key === "tirepressure") {
+      for (const [k, v] of top) {
+        if (!fpcIsPrim(v) || /_state$/i.test(k) || fpcLow(k) === "systemstate") continue;
+        const stateKey = top.find(([k2]) => fpcLow(k2) === `${fpcLow(k)}_state`);
+        const sv = stateKey ? stateKey[1] : null;
+        push(main, {
+          label: fpcAttrLabel(k, lang),
+          value: fpcAttrValue(hass, v, lang, k),
+          note: sv ? fpcAttrValue(hass, sv, lang) : "",
+          color: sv ? fpcAttrColor(sv) : null,
+        });
+        done.add(k);
+        if (stateKey) done.add(stateKey[0]);
+      }
+    }
+
+    if (key === "indicators") {
+      const on = [];
+      const off = [];
+      for (const [k, v] of top) {
+        if (typeof v !== "boolean") continue;
+        const base = fpcLow(k).replace(/_[0-9a-f]{4,}$/, "");
+        const name = FPC_INDICATORS[base] ? tr(FPC_INDICATORS[base], lang) : fpcHuman(base);
+        (v ? on : off).push(name);
+        done.add(k);
+      }
+      const onSec = { title: t(lang, "details_on"), rows: [] };
+      if (on.length) on.forEach((n) => push(onSec, { label: n, value: tr(FPC_LIGHT.on, lang), color: WARN }));
+      else onSec.rows.push({ label: t(lang, "details_none_on"), value: "", color: GOOD });
+      sections.push(onSec);
+      if (off.length) {
+        const offSec = { title: `${t(lang, "details_others")} (${off.length})`, folded: true, rows: [] };
+        off.sort((a, b) => a.localeCompare(b)).forEach((n) => push(offSec, { label: n, value: tr(FPC_LIGHT.off, lang) }));
+        sections.push(offSec);
+      }
+    }
+
+    // Nested objects become "Parent · child" rows inside one section
+    const flat = (sec, obj, prefix, depth) => {
+      for (const [k, v0] of Object.entries(obj)) {
+        if (FPC_SKIP_ATTRS.has(fpcLow(k))) continue;
+        const label = (prefix ? `${prefix} · ` : "") + fpcAttrLabel(k, lang, doors);
+        let v = v0;
+        const range = fpcRange(v, key, lang);
+        if (range) {
+          push(sec, { label, value: range.text, color: range.color });
+          continue;
+        }
+        while (fpcIsObj(v) && Object.keys(v).length === 1 && fpcIsObj(Object.values(v)[0])) v = Object.values(v)[0];
+        if (fpcIsObj(v)) {
+          if (depth >= 3) push(sec, { label, value: JSON.stringify(v) });
+          else flat(sec, v, label, depth + 1);
+        } else if (Array.isArray(v) && !v.every(fpcIsPrim)) {
+          v.forEach((x, i) => {
+            const l = v.length > 1 ? `${label} ${i + 1}` : label;
+            if (fpcIsObj(x) && Object.values(x).every(fpcIsPrim)) {
+              push(sec, { label: l, value: Object.values(x).map((y) => fpcAttrValue(hass, y, lang)).join(" · ") });
+            } else if (fpcIsObj(x)) flat(sec, x, l, depth + 1);
+            else push(sec, { label: l, value: fpcAttrValue(hass, x, lang) });
+          });
+        } else {
+          push(sec, { label, value: fpcAttrValue(hass, v, lang, k), color: fpcAttrColor(v, k) });
+        }
+      }
+    };
+
+    for (const [k, v0] of top) {
+      if (done.has(k)) continue;
+      const label = fpcAttrLabel(k, lang, doors);
+      let v = v0;
+      const range = fpcRange(v, key, lang);
+      if (range) {
+        push(main, { label, value: range.text, color: range.color });
+        continue;
+      }
+      while (fpcIsObj(v) && Object.keys(v).length === 1 && fpcIsObj(Object.values(v)[0])) v = Object.values(v)[0];
+      if (fpcIsObj(v)) {
+        const sec = { title: label, rows: [] };
+        flat(sec, v, "", 1);
+        if (sec.rows.length) sections.push(sec);
+      } else if (Array.isArray(v) && v.length && !v.every(fpcIsPrim)) {
+        const sec = { title: label, rows: [] };
+        const pairs = v.every((x) => fpcIsObj(x) && Object.keys(x).length === 2 && Object.values(x).every(fpcIsPrim));
+        if (pairs) {
+          v.forEach((x) => {
+            const [a, b] = Object.values(x);
+            push(sec, { label: fpcAttrValue(hass, a, lang), value: fpcAttrValue(hass, b, lang) });
+          });
+        } else {
+          const loc = (hass.locale && hass.locale.language) || lang;
+          v.slice(0, 30).forEach((x, i) => {
+            if (!fpcIsObj(x)) {
+              push(sec, { label: String(i + 1), value: fpcAttrValue(hass, x, lang) });
+              return;
+            }
+            const when = x.updateTime || x.timestamp || x.date || x.time;
+            const d = when ? new Date(when) : null;
+            const item = { title: d && !isNaN(d) ? `${label} · ${fpcDate(d, loc)}` : `${label} ${i + 1}`, rows: [] };
+            flat(item, x, "", 1);
+            if (item.rows.length) sections.push(item);
+          });
+          more += Math.max(0, v.length - 30);
+        }
+        if (sec.rows.length) sections.push(sec);
+      } else {
+        push(main, { label, value: fpcAttrValue(hass, v, lang, k), color: fpcAttrColor(v, k) });
+      }
+    }
+
+    let updated = null;
+    if (attrs.updateTime) {
+      const d = new Date(attrs.updateTime);
+      if (!isNaN(d)) updated = d;
+    }
+    return { sections: sections.filter((s) => s.rows.length), more, updated };
+  }
+
   // ---------- Card ----------
 
   const CARD_CSS = `
@@ -669,6 +1158,75 @@
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .notice { padding: 14px 20px 18px; font-size: 13px; color: rgba(255,255,255,0.72); }
+
+    .dlg {
+      box-sizing: border-box;
+      width: min(440px, calc(100vw - 24px));
+      max-width: none;
+      max-height: min(82vh, 760px);
+      margin: auto;
+      padding: 0;
+      overflow: hidden;
+      color: #fff;
+      font-family: inherit;
+      color-scheme: dark;
+      border-radius: var(--fpc-radius, 28px);
+      border: 1px solid rgba(255,255,255,0.10);
+      background: var(--fpc-background,
+        radial-gradient(circle at 50% 0%, rgba(100,140,255,0.20), transparent 60%),
+        linear-gradient(145deg, rgba(22,25,34,0.99), rgba(8,10,14,0.99)));
+      box-shadow: 0 24px 60px rgba(0,0,0,0.60), inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+    .dlg:focus { outline: none; }
+    .dlg[open] { display: flex; flex-direction: column; animation: fpc-in .22s ease; }
+    .dlg::backdrop { background: rgba(0,0,0,0.55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+    @keyframes fpc-in { from { opacity: 0; transform: translateY(14px) scale(0.98); } to { opacity: 1; transform: none; } }
+    .dhead { display: flex; align-items: center; gap: 12px; padding: 18px 18px 4px; }
+    .dicon {
+      flex: none; width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.08); --mdc-icon-size: 22px; color: rgba(255,255,255,0.85);
+    }
+    .dtitle { flex: 1; min-width: 0; }
+    .dname { font-size: 17px; font-weight: 700; line-height: 22px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .dsub { font-size: 12px; line-height: 16px; color: rgba(255,255,255,0.55); }
+    .dx {
+      all: unset; flex: none; width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+      background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); font-size: 15px;
+    }
+    .dx:hover { background: rgba(255,255,255,0.14); }
+    .dx:focus-visible, .dbtn:focus-visible { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: 2px; }
+    .dstate { padding: 6px 20px 14px; font-size: 26px; line-height: 32px; font-weight: 700; letter-spacing: -0.3px; }
+    .dbody { flex: 1 1 auto; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding: 0 14px 4px; }
+    .sec {
+      margin: 0 0 12px; padding: 2px 14px;
+      border-radius: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.07);
+    }
+    .stitle {
+      display: block; padding: 11px 0 3px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
+      color: rgba(255,255,255,0.50);
+    }
+    details.sec > summary { cursor: pointer; list-style: none; padding-bottom: 10px; }
+    details.sec > summary::-webkit-details-marker { display: none; }
+    details.sec > summary::after { content: " ▸"; }
+    details.sec[open] > summary::after { content: " ▾"; }
+    details.sec[open] > summary { padding-bottom: 3px; }
+    .row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid rgba(255,255,255,0.06); }
+    .stitle + .row, .sec > .row:first-child { border-top: 0; }
+    .dot { flex: none; width: 8px; height: 8px; border-radius: 50%; }
+    .rl { flex: 1; min-width: 0; font-size: 14px; line-height: 18px; color: rgba(255,255,255,0.75); }
+    .rv { max-width: 62%; text-align: right; font-size: 14px; line-height: 18px; font-weight: 600; overflow-wrap: anywhere; }
+    .rv small { display: block; font-size: 11px; line-height: 14px; font-weight: 500; color: rgba(255,255,255,0.55); }
+    .dmore { padding: 0 0 10px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.50); }
+    .dfoot { display: flex; gap: 8px; padding: 8px 14px 16px; }
+    .dbtn {
+      all: unset; flex: 1; box-sizing: border-box; text-align: center; cursor: pointer;
+      padding: 12px; border-radius: 16px; font-size: 14px; font-weight: 600;
+      background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.10);
+    }
+    .dbtn:hover { background: rgba(255,255,255,0.14); }
   `;
 
   class FordpassCard extends HTMLElement {
@@ -693,11 +1251,13 @@
     set hass(hass) {
       this._hass = hass;
       this._update();
+      if (this._dlgEntity) this._renderDetails();
     }
 
     disconnectedCallback() {
       clearTimeout(this._armTimer);
       this._armed = null;
+      if (this._dlg && this._dlg.open) this._dlg.close();
     }
 
     getCardSize() {
@@ -828,7 +1388,13 @@
               .join("")}
           </div>` : ""}`;
       }
-      this.shadowRoot.innerHTML = `<style>${CARD_CSS}</style><ha-card>${body}</ha-card>`;
+      // Replace everything but the details dialog, so an open pop-up survives a rebuild
+      Array.from(this.shadowRoot.childNodes).forEach((n) => {
+        if (n !== this._dlg) n.remove();
+      });
+      const tpl = document.createElement("template");
+      tpl.innerHTML = `<style>${CARD_CSS}</style><ha-card>${body}</ha-card>`;
+      this.shadowRoot.insertBefore(tpl.content, this._dlg || null);
 
       this._tiles = [];
       this.shadowRoot.querySelectorAll(".tile").forEach((el) => {
@@ -1004,7 +1570,12 @@
       if (!item || !hass) return;
       const key = fpcEntityKey(hass, item.entity);
       if (!fpcNavigates(item, key)) {
-        this._moreInfo(item.entity);
+        const st = hass.states[item.entity];
+        if (this._config.details !== false && st && fpcDetails(hass, st, key, this._lang).sections.length) {
+          this._openDetails(item.entity);
+        } else {
+          this._moreInfo(item.entity);
+        }
         return;
       }
       const coords = fpcCoords(hass.states[item.entity]);
@@ -1012,14 +1583,141 @@
         this._toast(t(this._lang, "no_position"));
         return;
       }
+      this._openUrl(fpcMapsUrl(coords, this._config.maps));
+    }
+
+    _openUrl(url) {
       const a = document.createElement("a");
-      a.href = fpcMapsUrl(coords, this._config.maps);
+      a.href = url;
       a.target = "_blank";
       a.rel = "noopener noreferrer";
       a.style.display = "none";
       this.shadowRoot.appendChild(a);
       a.click();
       a.remove();
+    }
+
+    // ---------- Details pop-up ----------
+
+    _ensureDialog() {
+      if (this._dlg) return this._dlg;
+      const dlg = document.createElement("dialog");
+      dlg.className = "dlg";
+      // Focus the dialog itself on open, so the close button does not start with a focus ring
+      dlg.setAttribute("autofocus", "");
+      dlg.tabIndex = -1;
+      dlg.addEventListener("click", (ev) => {
+        if (ev.target === dlg) {
+          dlg.close();
+          return;
+        }
+        const btn = ev.target.closest && ev.target.closest("[data-act]");
+        if (!btn) return;
+        const id = this._dlgEntity;
+        const act = btn.dataset.act;
+        if (act === "close") dlg.close();
+        else if (act === "history") {
+          dlg.close();
+          this._moreInfo(id);
+        } else if (act === "maps") {
+          const c = this._hass && fpcCoords(this._hass.states[id]);
+          if (c) this._openUrl(fpcMapsUrl(c, this._config.maps));
+        }
+      });
+      dlg.addEventListener("close", () => {
+        this._dlgEntity = null;
+        this._dlgSig = null;
+      });
+      this._dlg = dlg;
+      this.shadowRoot.appendChild(dlg);
+      return dlg;
+    }
+
+    _openDetails(entityId) {
+      const dlg = this._ensureDialog();
+      this._dlgEntity = entityId;
+      this._dlgSig = null;
+      this._renderDetails();
+      if (!dlg.open) {
+        try {
+          dlg.showModal();
+        } catch (e) {
+          dlg.setAttribute("open", "");
+        }
+      }
+      const body = dlg.querySelector(".dbody");
+      if (body) body.scrollTop = 0;
+    }
+
+    _renderDetails() {
+      const dlg = this._dlg;
+      const hass = this._hass;
+      const id = this._dlgEntity;
+      if (!dlg || !hass || !id) return;
+      const st = hass.states[id];
+      const lang = this._lang || fpcLang(hass, this._config);
+      const sig = JSON.stringify([lang, st && st.state, st && st.last_updated, Math.floor(Date.now() / 60000)]);
+      if (sig === this._dlgSig) return;
+      this._dlgSig = sig;
+
+      const key = fpcEntityKey(hass, id);
+      const item = (this._items || []).find((i) => i.entity === id) || { entity: id };
+      const vehicle = fpcVehicle(hass, this._config.device_id);
+      const name = item.name || fpcName(hass, id, vehicle ? vehicle.name : "", lang);
+      const d = fpcDetails(hass, st, key, lang);
+      const loc = (hass.locale && hass.locale.language) || lang;
+      const when = d.updated || (st && st.last_updated ? new Date(st.last_updated) : null);
+      const sub = when && !isNaN(when) ? `${t(lang, "details_updated")} ${fpcAgo(when, lang, loc)}` : "";
+
+      const rowHtml = (r) => `<div class="row">
+          ${r.color ? `<span class="dot" style="background:${r.color};box-shadow:0 0 8px ${r.color}"></span>` : ""}
+          <span class="rl">${esc(r.label)}</span>
+          <span class="rv">${esc(r.value)}${r.note ? `<small>${esc(r.note)}</small>` : ""}</span>
+        </div>`;
+      const secHtml = (s, i) =>
+        s.folded
+          ? `<details class="sec" data-sec="${i}"><summary class="stitle">${esc(s.title)}</summary>${s.rows.map(rowHtml).join("")}</details>`
+          : `<div class="sec">${s.title ? `<div class="stitle">${esc(s.title)}</div>` : ""}${s.rows.map(rowHtml).join("")}</div>`;
+
+      // Keep scroll position and expanded sections across live updates
+      const oldBody = dlg.querySelector(".dbody");
+      const scroll = oldBody ? oldBody.scrollTop : 0;
+      const opened = new Set(Array.from(dlg.querySelectorAll("details[open]")).map((el) => el.dataset.sec));
+
+      const coords = fpcCoords(st);
+      dlg.setAttribute("aria-label", name);
+      dlg.innerHTML = `
+        <div class="dhead">
+          <span class="dicon"></span>
+          <div class="dtitle">
+            <div class="dname">${esc(name)}</div>
+            ${sub ? `<div class="dsub" title="${esc(when ? fpcDate(when, loc) : "")}">${esc(sub)}</div>` : ""}
+          </div>
+          <button class="dx" type="button" data-act="close" aria-label="${esc(t(lang, "details_close"))}">✕</button>
+        </div>
+        <div class="dstate">${esc(fpcFormat(hass, st, key, lang))}</div>
+        <div class="dbody">
+          ${d.sections.map(secHtml).join("")}
+          ${d.more ? `<div class="dmore">${esc(t(lang, "details_more").replace("{n}", d.more))}</div>` : ""}
+        </div>
+        <div class="dfoot">
+          ${coords ? `<button class="dbtn" type="button" data-act="maps">${esc(t(lang, "details_maps"))}</button>` : ""}
+          <button class="dbtn" type="button" data-act="history">${esc(t(lang, "details_history"))}</button>
+        </div>`;
+
+      const icon = document.createElement("ha-state-icon");
+      icon.hass = hass;
+      icon.stateObj = st;
+      if (item.icon) icon.icon = item.icon;
+      const wrap = dlg.querySelector(".dicon");
+      wrap.appendChild(icon);
+      wrap.style.color = item.color || fpcStateColor(key, st && st.state) || FPC_ICON_COLORS[key] || "";
+
+      dlg.querySelectorAll("details[data-sec]").forEach((el) => {
+        if (opened.has(el.dataset.sec)) el.open = true;
+      });
+      const body = dlg.querySelector(".dbody");
+      if (body) body.scrollTop = scroll;
     }
 
     _toast(message) {

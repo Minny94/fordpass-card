@@ -17,6 +17,7 @@ It finds your vehicle on its own, lets you pick which sensors to show from a lis
 - **Controls.** A row of round buttons for lock/unlock, remote start and extend, climate temperature, heated/cooled seats, heated windscreen, rear defrost, heated steering wheel, honk & flash, EV charging and sync. Pick them from a second list in the editor. Only the commands your vehicle supports are offered.
 - **Second-tap confirmation.** Lock/unlock, remote start, horn, charging and delete commands only run when you tap twice within 4 seconds, so a stray tap does not unlock the van.
 - **Native pickers.** Climate temperature and seat levels open your phone's own picker (the wheel on iPhone) and send the value straight away.
+- **Details pop-up.** Tap a sensor and a pop-up shows everything FordPass sends for it, in plain language instead of raw JSON: pressure and status of each tyre, each door and lock, which warning lights are on, 12V battery voltage, AdBlue range, firmware history and so on. A button opens the usual Home Assistant history.
 - **GPS navigation.** The GPS tile opens directions to the vehicle in Apple Maps on iPhone/Mac and Google Maps elsewhere, or Waze if you prefer.
 - **Vehicle picture out of the box.** With no image set, the card shows the picture that FordPass provides for your vehicle.
 - **Doors-open picture.** Add a second image and the card crossfades to it while the door sensor reports `Open`.
@@ -95,6 +96,7 @@ entities:
 | `entities` | list | a default set | Sensors to show. Each item is an entity ID or an object with `entity` and optional `name`, `icon`, `color`, `navigate`. |
 | `controls` | list | a default set | Commands to show above the sensors. Each item is an entity ID or an object with `entity` and optional `name`, `icon`, `confirm`. Set `controls: []` to hide the row. |
 | `maps` | string | `auto` | App for GPS navigation: `auto`, `apple`, `google` or `waze`. |
+| `details` | boolean | `true` | Set to `false` to open the standard Home Assistant dialog instead of the details pop-up. |
 
 `navigate: true` turns any tile with coordinates (for example the vehicle tracker) into a navigation button; the GPS sensor does it by default. `confirm: false` removes the second-tap confirmation from a command, `confirm: true` adds it.
 
@@ -137,6 +139,7 @@ Card per Home Assistant pensata per l'[integrazione FordPass](https://github.com
 - **Colori di stato**: serrature, porte, finestrini e pressione gomme diventano verdi, arancioni o rossi in base allo stato.
 - **Cinque lingue**: nomi dei sensori, valori grezzi di FordPass ed editor tradotti in italiano, inglese, spagnolo, francese e tedesco. Di base segue la lingua di Home Assistant, ma puoi sceglierla nell'editor.
 - **Comandi**: blocco/sblocco, avviamento a distanza e prolunga, temperatura del clima, sedili riscaldati/ventilati, parabrezza e lunotto, volante riscaldato, clacson, ricarica e sincronizzazione. Sblocco, avviamento, clacson ed eliminazioni chiedono un secondo tocco entro 4 secondi.
+- **Pop-up dei dettagli**: tocca un sensore e si apre un pop-up con tutti i dati che FordPass manda per quel sensore, scritti in modo leggibile invece del JSON: pressione e stato di ogni gomma, ogni porta e serratura, spie accese, tensione della batteria 12V, autonomia AdBlue, cronologia firmware e così via. Un pulsante apre la classica cronologia di Home Assistant.
 - **Navigazione GPS**: il riquadro GPS apre il percorso fino al veicolo in Apple Mappe (iPhone/Mac), Google Maps o Waze.
 
 ### Installazione
