@@ -5,10 +5,14 @@
  * MIT License. Not affiliated with, endorsed by or sponsored by Ford Motor Company.
  */
 (() => {
-  const FPC_VERSION = "0.1.0";
+  const FPC_VERSION = "0.2.0";
   const FPC_TAG = "fordpass-card";
   const FPC_EDITOR_TAG = FPC_TAG + "-editor";
   const FPC_REPO = "https://github.com/OWNER/fordpass-card";
+
+  // Supported languages, in the order used by every translation row below
+  const FPC_LANGS = ["en", "it", "es", "fr", "de"];
+  const FPC_LANG_NAMES = { en: "English", it: "Italiano", es: "Español", fr: "Français", de: "Deutsch" };
 
   // Sensors shown when the user has not picked any (domain.translation_key)
   const FPC_DEFAULTS = [
@@ -48,9 +52,86 @@
     tracker: BAD,
   };
 
-  const FPC_I18N = {
+  // Sensor names by FordPass translation_key. Rows follow FPC_LANGS: en, it, es, fr, de.
+  // A "domain.key" entry wins over a plain "key" entry.
+  const FPC_NAMES = {
+    fuel: ["Fuel", "Carburante", "Combustible", "Carburant", "Kraftstoff"],
+    soc: ["Battery charge", "Carica batteria", "Carga de batería", "Charge batterie", "Akkustand"],
+    elveh: ["EV data", "Dati veicolo elettrico", "Datos VE", "Données VE", "E-Fahrzeugdaten"],
+    elvehplug: ["Charging plug", "Spina di ricarica", "Conector de carga", "Prise de charge", "Ladestecker"],
+    elvehcharging: ["Charging", "Ricarica", "Carga", "Recharge", "Laden"],
+    fuelrange: ["Range", "Autonomia", "Autonomía", "Autonomie", "Reichweite"],
+    odometer: ["Odometer", "Contachilometri", "Cuentakilómetros", "Compteur kilométrique", "Kilometerstand"],
+    battery: ["12V battery", "Batteria 12V", "Batería 12V", "Batterie 12V", "12V-Batterie"],
+    oil: ["Oil life", "Vita olio", "Vida del aceite", "Durée de vie de l'huile", "Öllebensdauer"],
+    tirepressure: ["Tyres", "Pneumatici", "Neumáticos", "Pneus", "Reifen"],
+    gps: ["GPS", "GPS", "GPS", "GPS", "GPS"],
+    alarm: ["Alarm", "Allarme", "Alarma", "Alarme", "Alarmanlage"],
+    ignitionstatus: ["Ignition", "Accensione", "Encendido", "Contact", "Zündung"],
+    doorstatus: ["Doors", "Porte", "Puertas", "Portes", "Türen"],
+    windowposition: ["Windows", "Finestrini", "Ventanillas", "Vitres", "Fenster"],
+    lastrefresh: ["Last update", "Ultimo aggiornamento", "Última actualización", "Dernière mise à jour", "Letzte Aktualisierung"],
+    speed: ["Speed", "Velocità", "Velocidad", "Vitesse", "Geschwindigkeit"],
+    enginespeed: ["Engine speed", "Giri motore", "Régimen del motor", "Régime moteur", "Motordrehzahl"],
+    indicators: ["Warnings", "Spie", "Testigos", "Témoins", "Warnleuchten"],
+    coolanttemp: ["Coolant temp.", "Temp. refrigerante", "Temp. refrigerante", "Temp. liquide de refroid.", "Kühlmitteltemp."],
+    outsidetemp: ["Outside temp.", "Temp. esterna", "Temp. exterior", "Temp. extérieure", "Außentemp."],
+    cabintemperature: ["Cabin temp.", "Temp. abitacolo", "Temp. habitáculo", "Temp. habitacle", "Innenraumtemp."],
+    messages: ["Messages", "Messaggi", "Mensajes", "Messages", "Nachrichten"],
+    dieselsystemstatus: ["Diesel system", "Sistema diesel", "Sistema diésel", "Système diesel", "Dieselsystem"],
+    exhaustfluidlevel: ["AdBlue", "AdBlue", "AdBlue", "AdBlue", "AdBlue"],
+    seatbelt: ["Seat belts", "Cinture", "Cinturones", "Ceintures", "Gurte"],
+    deviceconnectivity: ["Connectivity", "Connettività", "Conectividad", "Connectivité", "Konnektivität"],
+    parkingbrakestatus: ["Parking brake", "Freno di stazionamento", "Freno de mano", "Frein de stationnement", "Feststellbremse"],
+    brakepedalstatus: ["Brake pedal", "Pedale del freno", "Pedal de freno", "Pédale de frein", "Bremspedal"],
+    deepsleep: ["Deep sleep", "Sospensione", "Suspensión", "Veille profonde", "Tiefschlaf"],
+    remotestartstatus: ["Remote start", "Avviamento remoto", "Arranque remoto", "Démarrage à distance", "Fernstart"],
+    "sensor.doorlock": ["Locks", "Serrature", "Cerraduras", "Serrures", "Schlösser"],
+    "lock.doorlock": ["Door lock", "Blocco porte", "Bloqueo de puertas", "Verrouillage", "Türverriegelung"],
+    tracker: ["Location", "Posizione", "Ubicación", "Position", "Standort"],
+  };
+
+  // Raw FordPass states (upper case). "key:STATE" and "domain:STATE" entries win over a plain "STATE".
+  const FPC_STATES = {
+    LOCKED: ["Locked", "Bloccate", "Bloqueadas", "Verrouillées", "Verriegelt"],
+    UNLOCKED: ["Unlocked", "Sbloccate", "Desbloqueadas", "Déverrouillées", "Entriegelt"],
+    PARTLY_LOCKED: ["Partly locked", "Parzialmente bloccate", "Parcialmente bloqueadas", "Partiellement verrouillées", "Teilweise verriegelt"],
+    "lock:LOCKED": ["Locked", "Bloccato", "Bloqueado", "Verrouillé", "Verriegelt"],
+    "lock:UNLOCKED": ["Unlocked", "Sbloccato", "Desbloqueado", "Déverrouillé", "Entriegelt"],
+    "lock:LOCKING": ["Locking…", "Blocco in corso…", "Bloqueando…", "Verrouillage…", "Wird verriegelt…"],
+    "lock:UNLOCKING": ["Unlocking…", "Sblocco in corso…", "Desbloqueando…", "Déverrouillage…", "Wird entriegelt…"],
+    OPEN: ["Open", "Aperte", "Abiertas", "Ouvertes", "Offen"],
+    CLOSED: ["Closed", "Chiuse", "Cerradas", "Fermées", "Geschlossen"],
+    "windowposition:OPEN": ["Open", "Aperti", "Abiertas", "Ouvertes", "Offen"],
+    "windowposition:CLOSED": ["Closed", "Chiusi", "Cerradas", "Fermées", "Geschlossen"],
+    NORMAL_OPERATION: ["Normal", "Normale", "Normal", "Normal", "Normal"],
+    DISARMED: ["Disarmed", "Disinserito", "Desactivada", "Désactivée", "Unscharf"],
+    ARMED: ["Armed", "Inserito", "Activada", "Activée", "Scharf"],
+    ON: ["On", "Acceso", "Encendido", "Allumé", "An"],
+    OFF: ["Off", "Spento", "Apagado", "Éteint", "Aus"],
+    RUN: ["Running", "In moto", "En marcha", "En marche", "Läuft"],
+    START: ["Starting", "Avvio", "Arrancando", "Démarrage", "Startet"],
+    ACCESSORY: ["Accessory", "Accessori", "Accesorios", "Accessoires", "Zubehör"],
+    "parkingbrakestatus:ON": ["Engaged", "Inserito", "Echado", "Serré", "Angezogen"],
+    "parkingbrakestatus:OFF": ["Released", "Disinserito", "Quitado", "Desserré", "Gelöst"],
+    "brakepedalstatus:ON": ["Pressed", "Premuto", "Pisado", "Enfoncée", "Gedrückt"],
+    "brakepedalstatus:OFF": ["Released", "Rilasciato", "Suelto", "Relâchée", "Gelöst"],
+    BUCKLED: ["Buckled", "Allacciate", "Abrochados", "Attachées", "Angelegt"],
+    UNBUCKLED: ["Unbuckled", "Slacciate", "Desabrochados", "Détachées", "Nicht angelegt"],
+    CONNECTED: ["Connected", "Connesso", "Conectado", "Connecté", "Verbunden"],
+    DISCONNECTED: ["Disconnected", "Disconnesso", "Desconectado", "Déconnecté", "Getrennt"],
+    "device_tracker:HOME": ["Home", "A casa", "En casa", "À la maison", "Zuhause"],
+    "device_tracker:NOT_HOME": ["Away", "Fuori casa", "Fuera", "Absent", "Abwesend"],
+    UNKNOWN: ["Unknown", "Sconosciuto", "Desconocido", "Inconnu", "Unbekannt"],
+    UNAVAILABLE: ["Unavailable", "Non disponibile", "No disponible", "Indisponible", "Nicht verfügbar"],
+  };
+
+  // Editor and card interface text
+  const FPC_UI = {
     en: {
       vehicle: "Vehicle",
+      language: "Language",
+      language_auto: "Automatic (Home Assistant language)",
       title: "Title (empty = vehicle name)",
       image: "Image URL (empty = FordPass vehicle picture)",
       image_open: "Image URL with doors open (optional)",
@@ -62,12 +143,13 @@
       name_placeholder: "Custom name (optional)",
       diagnostic: "diagnostic",
       no_vehicle: "No FordPass vehicle found. Install and set up the FordPass integration first.",
-      pick_vehicle: "Pick a vehicle in the card editor.",
       up: "Move up",
       down: "Move down",
     },
     it: {
       vehicle: "Veicolo",
+      language: "Lingua",
+      language_auto: "Automatica (lingua di Home Assistant)",
       title: "Titolo (vuoto = nome del veicolo)",
       image: "URL immagine (vuoto = immagine FordPass del veicolo)",
       image_open: "URL immagine con porte aperte (facoltativa)",
@@ -79,16 +161,74 @@
       name_placeholder: "Nome personalizzato (facoltativo)",
       diagnostic: "diagnostica",
       no_vehicle: "Nessun veicolo FordPass trovato. Installa e configura prima l'integrazione FordPass.",
-      pick_vehicle: "Scegli un veicolo nell'editor della card.",
       up: "Sposta su",
       down: "Sposta giù",
     },
+    es: {
+      vehicle: "Vehículo",
+      language: "Idioma",
+      language_auto: "Automático (idioma de Home Assistant)",
+      title: "Título (vacío = nombre del vehículo)",
+      image: "URL de la imagen (vacío = imagen de FordPass)",
+      image_open: "URL de la imagen con puertas abiertas (opcional)",
+      columns: "Columnas",
+      sensors: "Sensores",
+      sensors_hint: "Marca los sensores que quieres mostrar. Usa las flechas para cambiar el orden.",
+      defaults: "Predeterminados",
+      none: "Ninguno",
+      name_placeholder: "Nombre personalizado (opcional)",
+      diagnostic: "diagnóstico",
+      no_vehicle: "No se encontró ningún vehículo FordPass. Instala y configura primero la integración FordPass.",
+      up: "Subir",
+      down: "Bajar",
+    },
+    fr: {
+      vehicle: "Véhicule",
+      language: "Langue",
+      language_auto: "Automatique (langue de Home Assistant)",
+      title: "Titre (vide = nom du véhicule)",
+      image: "URL de l'image (vide = image FordPass du véhicule)",
+      image_open: "URL de l'image portes ouvertes (facultatif)",
+      columns: "Colonnes",
+      sensors: "Capteurs",
+      sensors_hint: "Cochez les capteurs à afficher. Utilisez les flèches pour changer l'ordre.",
+      defaults: "Par défaut",
+      none: "Aucun",
+      name_placeholder: "Nom personnalisé (facultatif)",
+      diagnostic: "diagnostic",
+      no_vehicle: "Aucun véhicule FordPass trouvé. Installez et configurez d'abord l'intégration FordPass.",
+      up: "Monter",
+      down: "Descendre",
+    },
+    de: {
+      vehicle: "Fahrzeug",
+      language: "Sprache",
+      language_auto: "Automatisch (Sprache von Home Assistant)",
+      title: "Titel (leer = Fahrzeugname)",
+      image: "Bild-URL (leer = FordPass-Fahrzeugbild)",
+      image_open: "Bild-URL mit offenen Türen (optional)",
+      columns: "Spalten",
+      sensors: "Sensoren",
+      sensors_hint: "Wähle die anzuzeigenden Sensoren aus. Mit den Pfeilen änderst du die Reihenfolge.",
+      defaults: "Standard",
+      none: "Keine",
+      name_placeholder: "Eigener Name (optional)",
+      diagnostic: "Diagnose",
+      no_vehicle: "Kein FordPass-Fahrzeug gefunden. Installiere und richte zuerst die FordPass-Integration ein.",
+      up: "Nach oben",
+      down: "Nach unten",
+    },
   };
 
-  const t = (hass, key) => {
-    const lang = ((hass && (hass.locale && hass.locale.language)) || (hass && hass.language) || "en").split("-")[0];
-    return (FPC_I18N[lang] || FPC_I18N.en)[key] || FPC_I18N.en[key] || key;
-  };
+  // Language for this card: the configured one, or the Home Assistant user language, or English
+  function fpcLang(hass, config) {
+    const chosen = config && config.language;
+    if (chosen && chosen !== "auto" && FPC_LANGS.includes(chosen)) return chosen;
+    const ha = ((hass && hass.locale && hass.locale.language) || (hass && hass.language) || "en").toLowerCase().split("-")[0];
+    return FPC_LANGS.includes(ha) ? ha : "en";
+  }
+
+  const t = (lang, key) => (FPC_UI[lang] || FPC_UI.en)[key] || FPC_UI.en[key] || key;
 
   const esc = (s) =>
     String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -137,7 +277,13 @@
     }).filter(Boolean);
   }
 
-  function fpcName(hass, entityId, deviceName) {
+  function fpcName(hass, entityId, deviceName, lang) {
+    const reg = hass.entities && hass.entities[entityId];
+    if (reg && reg.platform === "fordpass") {
+      const key = fpcKey(reg);
+      const row = FPC_NAMES[`${fpcDomain(entityId)}.${key}`] || FPC_NAMES[key];
+      if (row) return row[FPC_LANGS.indexOf(lang)] || row[0];
+    }
     const st = hass.states[entityId];
     let n = (st && st.attributes.friendly_name) || entityId;
     if (deviceName && n.toLowerCase().startsWith(deviceName.toLowerCase() + " ")) {
@@ -146,14 +292,14 @@
     return n;
   }
 
-  function fpcListable(hass, vehicle) {
+  function fpcListable(hass, vehicle, lang) {
     if (!vehicle) return [];
     const defaults = fpcDefaultEntities(hass, vehicle);
     const list = vehicle.entities
       .filter((e) => FPC_LIST_DOMAINS.includes(fpcDomain(e.entity_id)) && !e.hidden && hass.states[e.entity_id])
       .map((e) => ({
         entity: e.entity_id,
-        name: fpcName(hass, e.entity_id, vehicle.name),
+        name: fpcName(hass, e.entity_id, vehicle.name, lang),
         diagnostic: e.entity_category === "diagnostic" || e.entity_category === "config",
         rank: defaults.indexOf(e.entity_id),
       }));
@@ -189,8 +335,15 @@
     return null;
   }
 
-  function fpcFormat(hass, stateObj) {
+  function fpcFormat(hass, stateObj, key, lang) {
     if (!stateObj) return "—";
+    const raw = String(stateObj.state);
+    if (raw !== "" && isNaN(Number(raw))) {
+      const up = raw.toUpperCase();
+      const domain = fpcDomain(stateObj.entity_id || "");
+      const row = FPC_STATES[`${key}:${up}`] || FPC_STATES[`${domain}:${up}`] || FPC_STATES[up];
+      if (row) return row[FPC_LANGS.indexOf(lang)] || row[0];
+    }
     if (typeof hass.formatEntityState === "function") {
       try {
         return hass.formatEntityState(stateObj);
@@ -325,6 +478,7 @@
     _resolve() {
       const hass = this._hass;
       const cfg = this._config || {};
+      const lang = fpcLang(hass, cfg);
       const vehicle = fpcVehicle(hass, cfg.device_id);
       let items = fpcItems(cfg);
       if (!cfg.entities && vehicle) items = fpcDefaultEntities(hass, vehicle).map((entity) => ({ entity }));
@@ -346,7 +500,7 @@
       const doorsOpen = String(doorState || "").toUpperCase() === "OPEN";
 
       const title = cfg.show_title === false ? "" : cfg.title || (vehicle ? vehicle.name : "");
-      return { vehicle, items, image, imageOpen: cfg.image_open || null, doorsOpen, title };
+      return { lang, vehicle, items, image, imageOpen: cfg.image_open || null, doorsOpen, title };
     }
 
     _update() {
@@ -358,6 +512,7 @@
         return s ? `${s.state}|${s.last_updated}` : "x";
       });
       const sig = JSON.stringify([
+        r.lang,
         r.vehicle && r.vehicle.id,
         r.items,
         r.image,
@@ -371,7 +526,7 @@
       if (sig === this._sig) return;
       this._sig = sig;
 
-      const structure = JSON.stringify([!!r.vehicle, r.items, !!r.image, !!r.imageOpen, r.title, this._config.columns]);
+      const structure = JSON.stringify([r.lang, !!r.vehicle, r.items, !!r.image, !!r.imageOpen, r.title, this._config.columns]);
       if (!this._built || structure !== this._structure) {
         this._build(r);
         this._structure = structure;
@@ -382,11 +537,10 @@
 
     _build(r) {
       if (!this.shadowRoot) this.attachShadow({ mode: "open" });
-      const hass = this._hass;
       const cols = Math.min(Math.max(Number(this._config.columns) || 2, 1), 4);
       let body = "";
       if (!r.vehicle && !(this._config.entities || []).length) {
-        body = `<div class="notice">${esc(t(hass, "no_vehicle"))}</div>`;
+        body = `<div class="notice">${esc(t(r.lang, "no_vehicle"))}</div>`;
       } else {
         body = `
           ${r.title || r.image ? `<div class="hero">
@@ -438,15 +592,15 @@
         const tile = this._tiles[idx];
         if (!tile) return;
         const st = hass.states[item.entity];
-        tile.name.textContent = item.name || fpcName(hass, item.entity, devName);
-        tile.state.textContent = fpcFormat(hass, st);
+        const reg = hass.entities[item.entity];
+        const key = reg ? fpcKey(reg) : "";
+        tile.name.textContent = item.name || fpcName(hass, item.entity, devName, r.lang);
+        tile.state.textContent = fpcFormat(hass, st, key, r.lang);
         tile.el.classList.toggle("unavailable", !st || st.state === "unavailable");
         tile.icon.hass = hass;
         tile.icon.stateObj = st;
         if (item.icon) tile.icon.icon = item.icon;
 
-        const reg = hass.entities[item.entity];
-        const key = reg ? fpcKey(reg) : "";
         const color = item.color || fpcStateColor(key, st && st.state) || FPC_ICON_COLORS[key] || null;
         tile.iconWrap.style.color = color || "";
       });
@@ -464,13 +618,16 @@
 
   const EDITOR_CSS = `
     :host { display: block; }
-    .vehicle { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; font-size: 12px; color: var(--secondary-text-color); }
-    .vehicle select {
+    .pickers { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .picker { display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: var(--secondary-text-color); min-width: 0; }
+    .picker select {
       font: inherit; font-size: 15px; padding: 12px 10px; border-radius: 8px;
       border: 1px solid var(--divider-color, #444);
       background: var(--card-background-color, transparent);
       color: var(--primary-text-color);
+      min-width: 0;
     }
+    @media (max-width: 450px) { .pickers { grid-template-columns: 1fr; } }
     .section { margin-top: 20px; }
     .head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
     .head h3 { margin: 0; font-size: 16px; font-weight: 500; }
@@ -529,13 +686,19 @@
       if (!this._rendered) this._render();
     }
 
+    _lang() {
+      return fpcLang(this._hass, this._config);
+    }
+
     _emit(config) {
       Object.keys(config).forEach((k) => {
         if (config[k] === "" || config[k] === undefined || config[k] === null) delete config[k];
       });
+      const langChanged = fpcLang(this._hass, config) !== this._lang();
       this._config = config;
       this.dispatchEvent(new CustomEvent("config-changed", { detail: { config }, bubbles: true, composed: true }));
-      this._renderList();
+      if (langChanged) this._render();
+      else this._renderList();
     }
 
     _schema() {
@@ -552,7 +715,10 @@
       if (!this.shadowRoot) this.attachShadow({ mode: "open" });
       if (!this._rendered) {
         this.shadowRoot.innerHTML = `<style>${EDITOR_CSS}</style>
-          <label class="vehicle"><span></span><select></select></label>
+          <div class="pickers">
+            <label class="picker vehicle"><span></span><select></select></label>
+            <label class="picker language"><span></span><select></select></label>
+          </div>
           <div class="form"></div>
           <div class="section">
             <div class="head">
@@ -566,30 +732,40 @@
             <div class="list"></div>
           </div>`;
         const form = document.createElement("ha-form");
-        form.computeLabel = (s) => t(this._hass, s.name);
+        form.computeLabel = (s) => t(this._lang(), s.name);
         form.addEventListener("value-changed", (ev) => this._formChanged(ev.detail.value));
         this.shadowRoot.querySelector(".form").appendChild(form);
         this._form = form;
         this.shadowRoot
           .querySelector(".vehicle select")
           .addEventListener("change", (ev) => this._formChanged({ device_id: ev.target.value }));
+        this.shadowRoot
+          .querySelector(".language select")
+          .addEventListener("change", (ev) => this._emit({ ...this._config, language: ev.target.value === "auto" ? undefined : ev.target.value }));
         this.shadowRoot.querySelector('[data-act="defaults"]').addEventListener("click", () => this._setDefaults());
         this.shadowRoot.querySelector('[data-act="none"]').addEventListener("click", () => this._emit({ ...this._config, entities: [] }));
         this._rendered = true;
       }
       const hass = this._hass;
+      const lang = this._lang();
       const vehicles = fpcVehicles(hass);
       const current = this._vehicle();
-      this.shadowRoot.querySelector(".vehicle span").textContent = t(hass, "vehicle");
+      this.shadowRoot.querySelector(".vehicle span").textContent = t(lang, "vehicle");
       this.shadowRoot.querySelector(".vehicle select").innerHTML = vehicles.length
         ? vehicles
             .map((v) => `<option value="${esc(v.id)}"${current && current.id === v.id ? " selected" : ""}>${esc(v.name)}</option>`)
             .join("")
-        : `<option value="">${esc(t(hass, "no_vehicle"))}</option>`;
-      this.shadowRoot.querySelector("h3").textContent = t(hass, "sensors");
-      this.shadowRoot.querySelector(".hint").textContent = t(hass, "sensors_hint");
-      this.shadowRoot.querySelector('[data-act="defaults"]').textContent = t(hass, "defaults");
-      this.shadowRoot.querySelector('[data-act="none"]').textContent = t(hass, "none");
+        : `<option value="">${esc(t(lang, "no_vehicle"))}</option>`;
+      const chosen = this._config.language || "auto";
+      this.shadowRoot.querySelector(".language span").textContent = t(lang, "language");
+      this.shadowRoot.querySelector(".language select").innerHTML = [
+        `<option value="auto"${chosen === "auto" ? " selected" : ""}>${esc(t(lang, "language_auto"))}</option>`,
+        ...FPC_LANGS.map((l) => `<option value="${l}"${chosen === l ? " selected" : ""}>${esc(FPC_LANG_NAMES[l])}</option>`),
+      ].join("");
+      this.shadowRoot.querySelector("h3").textContent = t(lang, "sensors");
+      this.shadowRoot.querySelector(".hint").textContent = t(lang, "sensors_hint");
+      this.shadowRoot.querySelector('[data-act="defaults"]').textContent = t(lang, "defaults");
+      this.shadowRoot.querySelector('[data-act="none"]').textContent = t(lang, "none");
       this._form.hass = hass;
       this._form.schema = this._schema();
       this._form.data = this._config;
@@ -603,7 +779,7 @@
     _formChanged(value) {
       const next = { ...this._config, ...value };
       if (next.columns !== undefined) next.columns = Number(next.columns) || undefined;
-      if (value.device_id !== this._config.device_id) {
+      if (value.device_id !== undefined && value.device_id !== this._config.device_id) {
         const v = fpcVehicle(this._hass, value.device_id);
         next.entities = fpcDefaultEntities(this._hass, v);
       }
@@ -631,14 +807,15 @@
       const listEl = root.querySelector(".list");
       if (!listEl) return;
       const hass = this._hass;
+      const lang = this._lang();
       const vehicle = this._vehicle();
       if (!vehicle) {
-        listEl.innerHTML = `<div class="row"><span></span><span class="notice">${esc(t(hass, "no_vehicle"))}</span><span></span></div>`;
+        listEl.innerHTML = `<div class="row"><span></span><span class="notice">${esc(t(lang, "no_vehicle"))}</span><span></span></div>`;
         return;
       }
       const items = this._currentItems();
       const selected = items.map((i) => i.entity);
-      const all = fpcListable(hass, vehicle);
+      const all = fpcListable(hass, vehicle, lang);
       const known = new Map(all.map((a) => [a.entity, a]));
       const rows = [
         ...items.map((i) => ({ entity: i.entity, custom: i.name || "", on: true, meta: known.get(i.entity) })),
@@ -646,21 +823,21 @@
       ];
 
       listEl.innerHTML = rows
-        .map((row, idx) => {
-          const name = row.meta ? row.meta.name : fpcName(hass, row.entity, vehicle.name);
+        .map((row) => {
+          const name = row.meta ? row.meta.name : fpcName(hass, row.entity, vehicle.name, lang);
           const pos = row.on ? selected.indexOf(row.entity) : -1;
           return `<div class="row${row.on ? " on" : ""}" data-entity="${esc(row.entity)}">
             <input type="checkbox" ${row.on ? "checked" : ""} aria-label="${esc(name)}">
             <div class="label">
-              <div class="n">${esc(name)}${row.meta && row.meta.diagnostic ? `<span class="tag">${esc(t(hass, "diagnostic"))}</span>` : ""}</div>
+              <div class="n">${esc(name)}${row.meta && row.meta.diagnostic ? `<span class="tag">${esc(t(lang, "diagnostic"))}</span>` : ""}</div>
               <div class="e">${esc(row.entity)}</div>
             </div>
             ${row.on
               ? `<div class="move">
-                  <button type="button" data-dir="-1" title="${esc(t(hass, "up"))}" ${pos === 0 ? "disabled" : ""}>▲</button>
-                  <button type="button" data-dir="1" title="${esc(t(hass, "down"))}" ${pos === selected.length - 1 ? "disabled" : ""}>▼</button>
+                  <button type="button" data-dir="-1" title="${esc(t(lang, "up"))}" ${pos === 0 ? "disabled" : ""}>▲</button>
+                  <button type="button" data-dir="1" title="${esc(t(lang, "down"))}" ${pos === selected.length - 1 ? "disabled" : ""}>▼</button>
                 </div>
-                <input class="rename" type="text" value="${esc(row.custom)}" placeholder="${esc(t(hass, "name_placeholder"))}">`
+                <input class="rename" type="text" value="${esc(row.custom)}" placeholder="${esc(t(lang, "name_placeholder"))}">`
               : "<span></span>"}
           </div>`;
         })

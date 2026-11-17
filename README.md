@@ -17,7 +17,8 @@ It finds your vehicle on its own, lets you pick which sensors to show from a lis
 - **Vehicle picture out of the box.** With no image set, the card shows the picture that FordPass provides for your vehicle.
 - **Doors-open picture.** Add a second image and the card crossfades to it while the door sensor reports `Open`.
 - **Status colours.** Locks, doors, windows and tyre pressure turn green, orange or red depending on their state.
-- **Native formatting.** Values use Home Assistant's own formatting, so units, decimals and language follow your settings.
+- **Five languages.** Sensor names, raw FordPass states (`LOCKED`, `NORMAL_OPERATION`, …) and the editor are translated into English, Italian, Spanish, French and German. By default the card follows your Home Assistant language; you can also pick one in the editor.
+- **Native formatting.** Numbers and units use Home Assistant's own formatting.
 
 ## Requirements
 
@@ -77,6 +78,7 @@ entities:
 | `show_image` | boolean | `true` | Set to `false` to hide the picture. |
 | `door_entity` | string | the FordPass door status sensor | Entity that triggers the doors-open picture when its state is `Open`. |
 | `columns` | number | `2` | Tiles per row, from 1 to 4. |
+| `language` | string | your Home Assistant language | `en`, `it`, `es`, `fr` or `de`. Other languages fall back to English. |
 | `entities` | list | a default set | Sensors to show. Each item is an entity ID or an object with `entity` and optional `name`, `icon`, `color`. |
 
 ### Styling
@@ -114,6 +116,7 @@ Card per Home Assistant pensata per l'[integrazione FordPass](https://github.com
 - **Immagine già pronta**: se non imposti un'immagine, la card usa quella che FordPass fornisce per il tuo veicolo.
 - **Immagine a porte aperte**: aggiungi una seconda immagine e la card passa a quella quando il sensore delle porte segna `Open`.
 - **Colori di stato**: serrature, porte, finestrini e pressione gomme diventano verdi, arancioni o rossi in base allo stato.
+- **Cinque lingue**: nomi dei sensori, valori grezzi di FordPass ed editor tradotti in italiano, inglese, spagnolo, francese e tedesco. Di base segue la lingua di Home Assistant, ma puoi sceglierla nell'editor.
 
 ### Installazione
 
