@@ -14,7 +14,11 @@ It finds your vehicle on its own, lets you pick which sensors to show from a lis
 
 - **Automatic vehicle detection.** The card looks for devices from the FordPass integration. No VIN or entity IDs to type.
 - **Pick sensors from a list.** The visual editor lists every sensor of the vehicle. Tick the ones you want, reorder them with the arrows and give them a custom name.
-- **Vehicle picture out of the box.** With no image set, the card shows the picture that FordPass provides for your vehicle.
+- **Controls.** A row of round buttons for lock/unlock, remote start and extend, climate temperature, heated/cooled seats, heated windscreen, rear defrost, heated steering wheel, honk & flash, EV charging and sync. Pick them from a second list in the editor. Only the commands your vehicle supports are offered.
+- **Second-tap confirmation.** Lock/unlock, remote start, horn, charging and delete commands only run when you tap twice within 4 seconds, so a stray tap does not unlock the van.
+- **Native pickers.** Climate temperature and seat levels open your phone's own picker (the wheel on iPhone) and send the value straight away.
+- **GPS navigation.** The GPS tile opens directions to the vehicle in Apple Maps on iPhone/Mac and Google Maps elsewhere, or Waze if you prefer.
+- **Vehicle picture out of the box.** For models with a picture shipped in `images/` (currently the Transit Custom, closed and doors open) the card uses it; for every other model it shows the picture FordPass provides.
 - **Doors-open picture.** Add a second image and the card crossfades to it while the door sensor reports `Open`.
 - **Status colours.** Locks, doors, windows and tyre pressure turn green, orange or red depending on their state.
 - **Five languages.** Sensor names, raw FordPass states (`LOCKED`, `NORMAL_OPERATION`, …) and the editor are translated into English, Italian, Spanish, French and German. By default the card follows your Home Assistant language; you can also pick one in the editor.
@@ -58,12 +62,21 @@ title: Ford Transit Custom
 image: /local/van_closed.png
 image_open: /local/van_open.png
 columns: 2
+maps: auto
+controls:
+  - lock.fordpass_xxxxxxxxxxxxxxxxx_doorlock
+  - switch.fordpass_xxxxxxxxxxxxxxxxx_ignition
+  - select.fordpass_xxxxxxxxxxxxxxxxx_rcctemperature
+  - select.fordpass_xxxxxxxxxxxxxxxxx_rccseatfrontleft
+  - entity: button.fordpass_xxxxxxxxxxxxxxxxx_request_refresh
+    name: Sync
 entities:
   - entity: sensor.fordpass_xxxxxxxxxxxxxxxxx_fuel
     name: Fuel
   - sensor.fordpass_xxxxxxxxxxxxxxxxx_odometer
   - sensor.fordpass_xxxxxxxxxxxxxxxxx_outsidetemp
   - device_tracker.fordpass_xxxxxxxxxxxxxxxxx_tracker
+  - sensor.fordpass_xxxxxxxxxxxxxxxxx_gps
 ```
 
 ### Options
@@ -73,13 +86,19 @@ entities:
 | `device_id` | string | first FordPass vehicle | The vehicle to show. |
 | `title` | string | vehicle name | Text at the top of the card. |
 | `show_title` | boolean | `true` | Set to `false` to hide the title. |
-| `image` | string | FordPass vehicle picture | URL of the picture, e.g. `/local/van.png`. |
-| `image_open` | string | none | Picture shown while a door is open. |
+| `image` | string | shipped model picture, else FordPass picture | URL of the picture, e.g. `/local/van.png`. |
+| `image_open` | string | shipped model picture, else none | Picture shown while a door is open. |
 | `show_image` | boolean | `true` | Set to `false` to hide the picture. |
 | `door_entity` | string | the FordPass door status sensor | Entity that triggers the doors-open picture when its state is `Open`. |
 | `columns` | number | `2` | Tiles per row, from 1 to 4. |
 | `language` | string | your Home Assistant language | `en`, `it`, `es`, `fr` or `de`. Other languages fall back to English. |
-| `entities` | list | a default set | Sensors to show. Each item is an entity ID or an object with `entity` and optional `name`, `icon`, `color`. |
+| `entities` | list | a default set | Sensors to show. Each item is an entity ID or an object with `entity` and optional `name`, `icon`, `color`, `navigate`. |
+| `controls` | list | a default set | Commands to show above the sensors. Each item is an entity ID or an object with `entity` and optional `name`, `icon`, `confirm`. Set `controls: []` to hide the row. |
+| `maps` | string | `auto` | App for GPS navigation: `auto`, `apple`, `google` or `waze`. |
+
+`navigate: true` turns any tile with coordinates (for example the vehicle tracker) into a navigation button; the GPS sensor does it by default. `confirm: false` removes the second-tap confirmation from a command, `confirm: true` adds it.
+
+Controls only send what the FordPass integration exposes. Remote start, climate and seat commands appear only on vehicles that support them.
 
 ### Styling
 
@@ -117,6 +136,8 @@ Card per Home Assistant pensata per l'[integrazione FordPass](https://github.com
 - **Immagine a porte aperte**: aggiungi una seconda immagine e la card passa a quella quando il sensore delle porte segna `Open`.
 - **Colori di stato**: serrature, porte, finestrini e pressione gomme diventano verdi, arancioni o rossi in base allo stato.
 - **Cinque lingue**: nomi dei sensori, valori grezzi di FordPass ed editor tradotti in italiano, inglese, spagnolo, francese e tedesco. Di base segue la lingua di Home Assistant, ma puoi sceglierla nell'editor.
+- **Comandi**: blocco/sblocco, avviamento a distanza e prolunga, temperatura del clima, sedili riscaldati/ventilati, parabrezza e lunotto, volante riscaldato, clacson, ricarica e sincronizzazione. Sblocco, avviamento, clacson ed eliminazioni chiedono un secondo tocco entro 4 secondi.
+- **Navigazione GPS**: il riquadro GPS apre il percorso fino al veicolo in Apple Mappe (iPhone/Mac), Google Maps o Waze.
 
 ### Installazione
 
