@@ -1,0 +1,6 @@
+{
+  "name": "FordPass Card",
+  "filename": "fordpass-card.js",
+  "render_readme": true,
+  "homeassistant": "2024.1.0"
+}
