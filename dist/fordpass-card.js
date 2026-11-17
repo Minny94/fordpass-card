@@ -5,10 +5,10 @@
  * MIT License. Not affiliated with, endorsed by or sponsored by Ford Motor Company.
  */
 (() => {
-  const FPC_VERSION = "0.4.1";
+  const FPC_VERSION = "0.5.0";
   const FPC_TAG = "fordpass-card";
   const FPC_EDITOR_TAG = FPC_TAG + "-editor";
-  const FPC_REPO = "https://github.com/OWNER/fordpass-card";
+  const FPC_REPO = "https://github.com/Minny94/fordpass-card";
 
   // Supported languages, in the order used by every translation row below
   const FPC_LANGS = ["en", "it", "es", "fr", "de"];
@@ -49,26 +49,6 @@
 
   // Map apps for the GPS navigation tile
   const FPC_MAPS = ["auto", "apple", "google", "waze"];
-
-  // Pictures shipped with the card (in images/ next to this file), picked by vehicle model.
-  // Any other model, or a missing file, falls back to the FordPass vehicle picture.
-  const FPC_MODEL_IMAGES = [{ match: /transit\s*custom/i, closed: "transit-custom.png", open: "transit-custom-open.png" }];
-
-  // Folder this file was loaded from, e.g. /hacsfiles/fordpass-card/ or /local/
-  const FPC_BASE = (() => {
-    try {
-      const s = [...document.querySelectorAll('script[src*="fordpass-card"]')].pop();
-      return s ? s.src.replace(/[?#].*$/, "").replace(/[^/]*$/, "") : null;
-    } catch (e) {
-      return null;
-    }
-  })();
-
-  function fpcModelImages(model) {
-    if (!FPC_BASE || !model) return null;
-    const m = FPC_MODEL_IMAGES.find((x) => x.match.test(model));
-    return m ? { closed: `${FPC_BASE}images/${m.closed}`, open: `${FPC_BASE}images/${m.open}` } : null;
-  }
 
   // Domains offered in the two editor lists
   const FPC_LIST_DOMAINS = ["sensor", "binary_sensor", "device_tracker"];
@@ -743,18 +723,10 @@
 
       let image = cfg.image || null;
       let imageOpen = cfg.image_open || null;
-      this._usingModelImage = false;
       if (!image && vehicle && cfg.show_image !== false) {
-        const bundled = this._modelImageFailed ? null : fpcModelImages(vehicle.model);
-        if (bundled) {
-          image = bundled.closed;
-          if (!imageOpen && !this._modelOpenFailed) imageOpen = bundled.open;
-          this._usingModelImage = true;
-        } else {
-          const imgEnt = fpcFind(vehicle, "image", "vehicleimage");
-          const st = imgEnt && hass.states[imgEnt.entity_id];
-          if (st && st.attributes.entity_picture) image = st.attributes.entity_picture;
-        }
+        const imgEnt = fpcFind(vehicle, "image", "vehicleimage");
+        const st = imgEnt && hass.states[imgEnt.entity_id];
+        if (st && st.attributes.entity_picture) image = st.attributes.entity_picture;
       }
       if (cfg.show_image === false) {
         image = null;
@@ -857,26 +829,6 @@
           </div>` : ""}`;
       }
       this.shadowRoot.innerHTML = `<style>${CARD_CSS}</style><ha-card>${body}</ha-card>`;
-
-      // A shipped model picture that cannot be loaded falls back to the FordPass picture
-      const closedImg = this.shadowRoot.querySelector("img.closed");
-      if (closedImg) {
-        closedImg.addEventListener("error", () => {
-          if (!this._usingModelImage) return;
-          this._modelImageFailed = true;
-          this._sig = null;
-          this._update();
-        });
-      }
-      const openImg = this.shadowRoot.querySelector("img.open");
-      if (openImg) {
-        openImg.addEventListener("error", () => {
-          if (!this._usingModelImage) return;
-          this._modelOpenFailed = true;
-          this._sig = null;
-          this._update();
-        });
-      }
 
       this._tiles = [];
       this.shadowRoot.querySelectorAll(".tile").forEach((el) => {

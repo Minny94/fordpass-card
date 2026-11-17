@@ -1,7 +1,7 @@
 # FordPass Card
 
 [![HACS Custom](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://hacs.xyz)
-[![Validate](https://github.com/OWNER/fordpass-card/actions/workflows/validate.yml/badge.svg)](https://github.com/OWNER/fordpass-card/actions/workflows/validate.yml)
+[![Validate](https://github.com/Minny94/fordpass-card/actions/workflows/validate.yml/badge.svg)](https://github.com/Minny94/fordpass-card/actions/workflows/validate.yml)
 
 A Lovelace card for Home Assistant built for the [FordPass integration](https://github.com/marq24/ha-fordpass) by marq24.
 It finds your vehicle on its own, lets you pick which sensors to show from a list, and swaps the picture when a door is open.
@@ -18,7 +18,7 @@ It finds your vehicle on its own, lets you pick which sensors to show from a lis
 - **Second-tap confirmation.** Lock/unlock, remote start, horn, charging and delete commands only run when you tap twice within 4 seconds, so a stray tap does not unlock the van.
 - **Native pickers.** Climate temperature and seat levels open your phone's own picker (the wheel on iPhone) and send the value straight away.
 - **GPS navigation.** The GPS tile opens directions to the vehicle in Apple Maps on iPhone/Mac and Google Maps elsewhere, or Waze if you prefer.
-- **Vehicle picture out of the box.** For models with a picture shipped in `images/` (currently the Transit Custom, closed and doors open) the card uses it; for every other model it shows the picture FordPass provides.
+- **Vehicle picture out of the box.** With no image set, the card shows the picture that FordPass provides for your vehicle.
 - **Doors-open picture.** Add a second image and the card crossfades to it while the door sensor reports `Open`.
 - **Status colours.** Locks, doors, windows and tyre pressure turn green, orange or red depending on their state.
 - **Five languages.** Sensor names, raw FordPass states (`LOCKED`, `NORMAL_OPERATION`, …) and the editor are translated into English, Italian, Spanish, French and German. By default the card follows your Home Assistant language; you can also pick one in the editor.
@@ -34,12 +34,12 @@ It finds your vehicle on its own, lets you pick which sensors to show from a lis
 ### HACS (recommended)
 
 1. Open HACS → the three-dot menu → **Custom repositories**.
-2. Add `https://github.com/OWNER/fordpass-card` with type **Dashboard**.
+2. Add `https://github.com/Minny94/fordpass-card` with type **Dashboard**.
 3. Search for **FordPass Card**, install it, then reload the browser.
 
 ### Manual
 
-1. Download `fordpass-card.js` from the [latest release](https://github.com/OWNER/fordpass-card/releases/latest).
+1. Download `fordpass-card.js` from the [latest release](https://github.com/Minny94/fordpass-card/releases/latest).
 2. Copy it to `/config/www/fordpass-card.js`.
 3. Go to **Settings → Dashboards → ⋮ → Resources** and add `/local/fordpass-card.js` as a **JavaScript module**.
 
@@ -86,8 +86,8 @@ entities:
 | `device_id` | string | first FordPass vehicle | The vehicle to show. |
 | `title` | string | vehicle name | Text at the top of the card. |
 | `show_title` | boolean | `true` | Set to `false` to hide the title. |
-| `image` | string | shipped model picture, else FordPass picture | URL of the picture, e.g. `/local/van.png`. |
-| `image_open` | string | shipped model picture, else none | Picture shown while a door is open. |
+| `image` | string | FordPass vehicle picture | URL of the picture, e.g. `/local/van.png`. |
+| `image_open` | string | none | Picture shown while a door is open. |
 | `show_image` | boolean | `true` | Set to `false` to hide the picture. |
 | `door_entity` | string | the FordPass door status sensor | Entity that triggers the doors-open picture when its state is `Open`. |
 | `columns` | number | `2` | Tiles per row, from 1 to 4. |
@@ -142,7 +142,7 @@ Card per Home Assistant pensata per l'[integrazione FordPass](https://github.com
 ### Installazione
 
 1. In HACS apri il menu a tre puntini → **Repository personalizzati**.
-2. Aggiungi `https://github.com/OWNER/fordpass-card` con tipo **Dashboard**.
+2. Aggiungi `https://github.com/Minny94/fordpass-card` con tipo **Dashboard**.
 3. Cerca **FordPass Card**, installala e ricarica il browser.
 
 Poi modifica una dashboard, aggiungi una card e scegli **FordPass Card**.
