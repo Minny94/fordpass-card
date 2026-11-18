@@ -5,7 +5,7 @@
  * MIT License. Not affiliated with, endorsed by or sponsored by Ford Motor Company.
  */
 (() => {
-  const FPC_VERSION = "0.6.0";
+  const FPC_VERSION = "0.7.0";
   const FPC_TAG = "fordpass-card";
   const FPC_EDITOR_TAG = FPC_TAG + "-editor";
   const FPC_REPO = "https://github.com/Minny94/fordpass-card";
@@ -136,6 +136,7 @@
     msgdeleteall: ["Delete all messages", "Elimina tutti i messaggi", "Borrar todos los mensajes", "Supprimer tous les messages", "Alle Nachrichten löschen"],
     autosoftwareupdates: ["Auto updates", "Aggiornamenti automatici", "Actualizaciones automáticas", "Mises à jour auto", "Auto-Updates"],
     "switch.ignition": ["Remote start", "Avviamento remoto", "Arranque remoto", "Démarrage à distance", "Fernstart"],
+    "switch.ignition:on": ["Stop engine", "Spegni motore", "Apagar motor", "Arrêter le moteur", "Motor stoppen"],
     extendremotestart: ["Extend start", "Prolunga avviamento", "Prolongar arranque", "Prolonger", "Verlängern"],
     rccdefrostfront: ["Heated windscreen", "Parabrezza riscaldato", "Parabrisas térmico", "Pare-brise chauffant", "Frontscheibenheizung"],
     rccdefrostrear: ["Rear defrost", "Lunotto termico", "Luneta térmica", "Dégivrage arrière", "Heckscheibenheizung"],
@@ -158,6 +159,8 @@
     "lock:UNLOCKED": ["Unlocked", "Sbloccato", "Desbloqueado", "Déverrouillé", "Entriegelt"],
     "lock:LOCKING": ["Locking…", "Blocco in corso…", "Bloqueando…", "Verrouillage…", "Wird verriegelt…"],
     "lock:UNLOCKING": ["Unlocking…", "Sblocco in corso…", "Desbloqueando…", "Déverrouillage…", "Wird entriegelt…"],
+    "ignition:ON": ["Running", "Avviato", "En marcha", "En marche", "Läuft"],
+    "ignition:OFF": ["Off", "Spento", "Apagado", "Arrêté", "Aus"],
     OPEN: ["Open", "Aperte", "Abiertas", "Ouvertes", "Offen"],
     CLOSED: ["Closed", "Chiuse", "Cerradas", "Fermées", "Geschlossen"],
     "windowposition:OPEN": ["Open", "Aperti", "Abiertas", "Ouvertes", "Offen"],
@@ -382,6 +385,17 @@
       up: "Move up",
       down: "Move down",
       confirm_tap: "Tap again",
+      cmd_sending: "Sending…",
+      cmd_waiting: "Waiting for the vehicle…",
+      cmd_starting: "Starting…",
+      cmd_stopping: "Stopping…",
+      cmd_locking: "Locking…",
+      cmd_unlocking: "Unlocking…",
+      cmd_done: "Done",
+      cmd_sent: "Sent",
+      cmd_timeout: "No confirmation",
+      cmd_timeout_hint: "The vehicle has not confirmed the command yet. Check FordPass before trying again.",
+      cmd_busy: "A command is already in progress. Wait for the vehicle to reply.",
       sent: "Command sent",
       failed: "Command failed",
       navigate: "Navigate",
@@ -419,6 +433,17 @@
       up: "Sposta su",
       down: "Sposta giù",
       confirm_tap: "Tocca ancora",
+      cmd_sending: "Invio…",
+      cmd_waiting: "Attendo il veicolo…",
+      cmd_starting: "Avvio…",
+      cmd_stopping: "Spegnimento…",
+      cmd_locking: "Blocco…",
+      cmd_unlocking: "Sblocco…",
+      cmd_done: "Fatto",
+      cmd_sent: "Inviato",
+      cmd_timeout: "Nessuna conferma",
+      cmd_timeout_hint: "Il veicolo non ha ancora confermato il comando. Controlla su FordPass prima di riprovare.",
+      cmd_busy: "C'è già un comando in corso: aspetta la risposta del veicolo.",
       sent: "Comando inviato",
       failed: "Comando non riuscito",
       navigate: "Naviga",
@@ -456,6 +481,17 @@
       up: "Subir",
       down: "Bajar",
       confirm_tap: "Toca otra vez",
+      cmd_sending: "Enviando…",
+      cmd_waiting: "Esperando al vehículo…",
+      cmd_starting: "Arrancando…",
+      cmd_stopping: "Apagando…",
+      cmd_locking: "Bloqueando…",
+      cmd_unlocking: "Desbloqueando…",
+      cmd_done: "Hecho",
+      cmd_sent: "Enviado",
+      cmd_timeout: "Sin confirmación",
+      cmd_timeout_hint: "El vehículo aún no ha confirmado la orden. Revisa FordPass antes de volver a intentarlo.",
+      cmd_busy: "Ya hay una orden en curso. Espera la respuesta del vehículo.",
       sent: "Orden enviada",
       failed: "La orden ha fallado",
       navigate: "Navegar",
@@ -493,6 +529,17 @@
       up: "Monter",
       down: "Descendre",
       confirm_tap: "Appuyez encore",
+      cmd_sending: "Envoi…",
+      cmd_waiting: "Attente du véhicule…",
+      cmd_starting: "Démarrage…",
+      cmd_stopping: "Arrêt…",
+      cmd_locking: "Verrouillage…",
+      cmd_unlocking: "Déverrouillage…",
+      cmd_done: "Fait",
+      cmd_sent: "Envoyé",
+      cmd_timeout: "Pas de confirmation",
+      cmd_timeout_hint: "Le véhicule n'a pas encore confirmé la commande. Vérifiez FordPass avant de réessayer.",
+      cmd_busy: "Une commande est déjà en cours. Attendez la réponse du véhicule.",
       sent: "Commande envoyée",
       failed: "Échec de la commande",
       navigate: "Naviguer",
@@ -530,6 +577,17 @@
       up: "Nach oben",
       down: "Nach unten",
       confirm_tap: "Nochmal tippen",
+      cmd_sending: "Wird gesendet…",
+      cmd_waiting: "Warte auf Fahrzeug…",
+      cmd_starting: "Startet…",
+      cmd_stopping: "Wird gestoppt…",
+      cmd_locking: "Verriegeln…",
+      cmd_unlocking: "Entriegeln…",
+      cmd_done: "Erledigt",
+      cmd_sent: "Gesendet",
+      cmd_timeout: "Keine Bestätigung",
+      cmd_timeout_hint: "Das Fahrzeug hat den Befehl noch nicht bestätigt. Prüfe FordPass, bevor du es erneut versuchst.",
+      cmd_busy: "Es läuft bereits ein Befehl. Warte auf die Antwort des Fahrzeugs.",
       sent: "Befehl gesendet",
       failed: "Befehl fehlgeschlagen",
       navigate: "Navigieren",
@@ -1101,7 +1159,21 @@
     }
     .ctl.armed .ring { color: ${WARN}; border-color: ${WARN}; animation: fpc-pulse 1s ease-in-out infinite; }
     .ctl.armed .cstate { color: ${WARN}; font-weight: 700; }
-    .ctl.busy .ring { opacity: 0.55; }
+    .ring { position: relative; }
+    .ctl.pending .ring { color: ${BLUE}; border-color: rgba(113,184,255,0.35); }
+    .ctl.pending .ring::after {
+      content: ""; position: absolute; inset: -5px; border-radius: 50%;
+      border: 2px solid transparent; border-top-color: ${BLUE}; border-right-color: ${BLUE};
+      animation: fpc-spin .9s linear infinite;
+    }
+    .ctl.pending .cstate { color: ${BLUE}; font-weight: 700; }
+    .ctl.done .ring { color: ${GOOD}; border-color: ${GOOD}; box-shadow: 0 0 18px rgba(91,237,150,0.40), 0 6px 16px rgba(0,0,0,0.35); }
+    .ctl.done .cstate { color: ${GOOD}; font-weight: 700; }
+    .ctl.fail .ring { color: ${BAD}; border-color: ${BAD}; }
+    .ctl.fail .cstate, .ctl.timeout .cstate { color: ${WARN}; font-weight: 700; }
+    .ctl.fail .cstate { color: ${BAD}; }
+    .ctl.timeout .ring { color: ${WARN}; border-color: ${WARN}; }
+    @keyframes fpc-spin { to { transform: rotate(360deg); } }
     .ctl.unavailable { opacity: 0.4; pointer-events: none; }
     @keyframes fpc-pulse {
       0%, 100% { box-shadow: 0 0 0 0 rgba(255,188,75,0.55); }
@@ -1250,6 +1322,7 @@
 
     set hass(hass) {
       this._hass = hass;
+      this._checkPending();
       this._update();
       if (this._dlgEntity) this._renderDetails();
     }
@@ -1329,6 +1402,7 @@
         stateSig(r.items),
         stateSig(r.controls),
         this._armed,
+        this._pendingSig(),
         this._hass.locale && this._hass.locale.language,
       ]);
       if (sig === this._sig) return;
@@ -1443,7 +1517,12 @@
         const st = hass.states[c.entity];
         const domain = fpcDomain(c.entity);
         const key = fpcEntityKey(hass, c.entity);
-        const name = c.name || fpcName(hass, c.entity, devName, r.lang);
+        const s0 = st ? String(st.state) : "";
+        const name =
+          c.name ||
+          (domain === "switch" && key === "ignition" && s0 === "on"
+            ? tr(FPC_NAMES["switch.ignition:on"], r.lang)
+            : fpcName(hass, c.entity, devName, r.lang));
         ui.label.textContent = name;
         ui.el.title = name;
         ui.el.setAttribute("aria-label", name);
@@ -1453,10 +1532,20 @@
         ui.el.classList.toggle("bad", domain === "lock" && (s === "unlocked" || s === "open"));
         ui.el.classList.toggle("on", domain === "switch" && s === "on");
         ui.el.classList.toggle("armed", this._armed === idx);
+        const p = this._pending && this._pending[c.entity];
+        const phase = p ? p.phase : "";
+        ["pending", "done", "fail", "timeout"].forEach((cl) => ui.el.classList.remove(cl));
+        if (phase === "sending" || phase === "waiting") ui.el.classList.add("pending");
+        else if (phase) ui.el.classList.add(phase);
+        ui.el.setAttribute("aria-busy", phase === "sending" || phase === "waiting" ? "true" : "false");
         ui.icon.hass = hass;
         ui.icon.stateObj = st;
         if (c.icon) ui.icon.icon = c.icon;
         if (this._armed === idx) ui.state.textContent = t(r.lang, "confirm_tap");
+        else if (phase === "sending" || phase === "waiting") ui.state.textContent = t(r.lang, p.text);
+        else if (phase === "done") ui.state.textContent = domain === "button" ? t(r.lang, "cmd_sent") : `${fpcFormat(hass, st, key, r.lang)} ✓`;
+        else if (phase === "fail") ui.state.textContent = t(r.lang, "failed");
+        else if (phase === "timeout") ui.state.textContent = t(r.lang, "cmd_timeout");
         else if (domain === "button") ui.state.textContent = "";
         else ui.state.textContent = fpcFormat(hass, st, key, r.lang);
 
@@ -1470,7 +1559,9 @@
             ui.optSig = optSig;
           }
           ui.select.setAttribute("aria-label", name);
-          if (ui.select.value !== st.state) ui.select.value = st.state;
+          // While a new value is on its way, keep showing the value that was picked
+          const shown = (phase === "sending" || phase === "waiting") && p.target ? p.target : st.state;
+          if (ui.select.value !== shown) ui.select.value = shown;
         }
       });
 
@@ -1510,6 +1601,11 @@
       if (!st) return;
       const domain = fpcDomain(c.entity);
       const key = fpcEntityKey(hass, c.entity);
+      if (this._isBusy(c.entity)) {
+        this._disarm();
+        this._toast(t(this._lang, "cmd_busy"));
+        return;
+      }
 
       if (domain === "select" || domain === "number") {
         this._disarm();
@@ -1537,13 +1633,98 @@
         return;
       }
 
-      const ui = this._ctls[idx];
-      if (ui) ui.el.classList.add("busy");
+      // What the state should become, and what to show meanwhile
+      let target = null;
+      let text = "cmd_sending";
+      if (domain === "lock") {
+        target = call[1] === "lock" ? "locked" : "unlocked";
+        text = call[1] === "lock" ? "cmd_locking" : "cmd_unlocking";
+      } else if (domain === "switch") {
+        target = call[1] === "turn_on" ? "on" : "off";
+        if (key === "ignition") text = target === "on" ? "cmd_starting" : "cmd_stopping";
+      }
+      const timeout = domain === "lock" || key === "ignition" ? 150000 : 90000;
+      this._runCommand(c.entity, call[0], call[1], { entity_id: c.entity }, target, text, timeout);
+    }
+
+    // ---------- Command feedback ----------
+
+    _pendingSig() {
+      if (!this._pending) return "";
+      return Object.entries(this._pending)
+        .map(([id, p]) => `${id}:${p.phase}:${p.text}`)
+        .join("|");
+    }
+
+    _isBusy(entityId) {
+      const p = this._pending && this._pending[entityId];
+      return !!p && (p.phase === "sending" || p.phase === "waiting");
+    }
+
+    _setPhase(entityId, phase, extra) {
+      if (!this._pending) this._pending = {};
+      const prev = this._pending[entityId];
+      if (prev) clearTimeout(prev.timer);
+      if (!phase) delete this._pending[entityId];
+      else this._pending[entityId] = { ...(prev || {}), ...(extra || {}), phase, timer: null };
+      this._sig = null;
+      this._update();
+    }
+
+    // Show the result for a few seconds, then go back to the normal state
+    _finish(entityId, phase, ms) {
+      this._setPhase(entityId, phase);
+      const p = this._pending[entityId];
+      if (p) p.timer = setTimeout(() => this._setPhase(entityId, null), ms);
+    }
+
+    _runCommand(entityId, domain, service, data, target, text, timeout) {
+      const hass = this._hass;
       const lang = this._lang;
-      Promise.resolve(hass.callService(call[0], call[1], { entity_id: c.entity }))
-        .then(() => this._toast(t(lang, "sent")))
-        .catch((err) => this._toast(`${t(lang, "failed")}: ${(err && err.message) || err}`))
-        .finally(() => setTimeout(() => ui && ui.el.classList.remove("busy"), 600));
+      this._setPhase(entityId, "sending", { text, target, started: Date.now() });
+      // Stop waiting if the vehicle never confirms
+      const guard = setTimeout(() => {
+        if (!this._isBusy(entityId)) return;
+        this._finish(entityId, "timeout", 8000);
+        this._toast(t(lang, "cmd_timeout_hint"));
+      }, timeout);
+      this._pending[entityId].guard = guard;
+
+      Promise.resolve(hass.callService(domain, service, data))
+        .then(() => {
+          const p = this._pending && this._pending[entityId];
+          if (!p || p.phase !== "sending") return;
+          if (!target) {
+            clearTimeout(guard);
+            this._finish(entityId, "done", 3000);
+            return;
+          }
+          const st = this._hass.states[entityId];
+          if (st && st.state === target) {
+            clearTimeout(guard);
+            this._finish(entityId, "done", 4000);
+          } else {
+            this._setPhase(entityId, "waiting", { text: text === "cmd_sending" ? "cmd_waiting" : text });
+          }
+        })
+        .catch((err) => {
+          clearTimeout(guard);
+          this._finish(entityId, "fail", 6000);
+          this._toast(`${t(lang, "failed")}: ${(err && err.message) || err}`);
+        });
+    }
+
+    // Called on every hass update: a waiting command is done when its entity reaches the target state
+    _checkPending() {
+      if (!this._pending || !this._hass) return;
+      for (const [id, p] of Object.entries(this._pending)) {
+        if (p.phase !== "waiting" || !p.target) continue;
+        const st = this._hass.states[id];
+        if (st && st.state === p.target) {
+          clearTimeout(p.guard);
+          this._finish(id, "done", 4000);
+        }
+      }
     }
 
     _selectOption(idx, option) {
@@ -1553,15 +1734,12 @@
       const st = hass.states[c.entity];
       if (!st || st.state === option) return;
       const ui = this._ctls[idx];
-      if (ui) ui.el.classList.add("busy");
-      const lang = this._lang;
-      Promise.resolve(hass.callService("select", "select_option", { entity_id: c.entity, option }))
-        .then(() => this._toast(t(lang, "sent")))
-        .catch((err) => {
-          if (ui && ui.select) ui.select.value = st.state;
-          this._toast(`${t(lang, "failed")}: ${(err && err.message) || err}`);
-        })
-        .finally(() => setTimeout(() => ui && ui.el.classList.remove("busy"), 600));
+      if (this._isBusy(c.entity)) {
+        if (ui && ui.select) ui.select.value = st.state;
+        this._toast(t(this._lang, "cmd_busy"));
+        return;
+      }
+      this._runCommand(c.entity, "select", "select_option", { entity_id: c.entity, option }, option, "cmd_sending", 90000);
     }
 
     _tileTap(idx) {
